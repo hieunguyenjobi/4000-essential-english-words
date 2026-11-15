@@ -711,6 +711,65 @@ kbd {
 .stat__icon--xp { background: rgba(217, 139, 11, 0.16); color: var(--warn); }
 .stat__icon--mastered { background: var(--good-soft); color: var(--good); }
 
+/* ---- Progress panel (Giai đoạn 1) ---- */
+.progress-panel {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+}
+.progress-panel__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin-bottom: 12px;
+}
+.progress-panel__head h2 {
+  font-size: 1.05rem;
+  margin: 0;
+}
+.progress-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pbar {
+  display: grid;
+  grid-template-columns: 72px 1fr 36px;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+.pbar__label { color: var(--text-soft); font-weight: 600; }
+.pbar__track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--track);
+  overflow: hidden;
+}
+.pbar__fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.45s var(--ease);
+  background: var(--accent);
+}
+.pbar[data-state="new"] .pbar__fill { background: var(--box-0); }
+.pbar[data-state="learning"] .pbar__fill { background: var(--box-2); }
+.pbar[data-state="review"] .pbar__fill { background: var(--box-4); }
+.pbar[data-state="mastered"] .pbar__fill { background: var(--good); }
+.pbar[data-state="leech"] .pbar__fill { background: var(--bad); }
+.pbar__n { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+#new-cards-today-text { margin: 0; }
+.progress-panel__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+}
+
 .filters { display: flex; flex-wrap: wrap; gap: 6px; }
 .filter {
   padding: 7px 14px;
@@ -2037,3 +2096,25 @@ kbd {
   border-radius: 12px; border: 1px solid var(--stroke);
   background: var(--glass-strong); color: var(--text);
   font-weight: 750; fon
+
+/* ---- Bộ chọn sách (trang chủ) ---- */
+.book-switch { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+.book-switch__btn {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 40px; padding: 8px 14px; border-radius: 14px;
+  border: 1px solid var(--stroke, var(--glass-border)); background: var(--glass-strong); color: var(--text-soft);
+  font: inherit; font-weight: 700; cursor: pointer; line-height: 1.15; gap: 2px;
+}
+.book-switch__btn[aria-pressed="true"],
+.book-switch__btn.is-active { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+.book-switch__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.book-switch__label { font-size: 0.92rem; }
+.book-switch__meta { font-size: 0.72rem; font-weight: 600; opacity: 0.85; font-variant-numeric: tabular-nums; }
+.diagnostics-out {
+  margin: 8px 0 0; padding: 10px 12px; border-radius: 12px;
+  background: var(--track); white-space: pre-wrap; word-break: break-word;
+  max-height: 220px; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Nhãn khoảng ôn kế tiếp trên nút đánh giá flashcard */
+.rate-next{display:block;margin-top:2px;font-size:.72rem;font-weight:700;opacity:.85;letter-spacing:.01em}

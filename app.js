@@ -1,5 +1,5 @@
 /* ==========================================================================
-   4000 Essential English Word II — app.js
+   4000 Essential English Words — app.js (multi-book)
    Vanilla JS, không framework, chạy offline, PWA + IndexedDB + FSRS.
 
    MỤC LỤC
@@ -31,7 +31,7 @@
   const I18N = {
     vi: {
       skip_link: 'Bỏ qua điều hướng',
-      brand_sub: 'Book 2 · Flashcard · FSRS',
+      brand_sub: 'Book 3 · Flashcard · FSRS',
       dash_title: 'Học từ vựng, nhớ lâu hơn mỗi ngày',
       dash_greeting_due: 'Bạn có {n} từ cần ôn hôm nay. Ôn xong sẽ nhớ lâu hơn.',
       dash_greeting_ok: 'Hôm nay không có từ nào đến hạn ôn. Hãy học thêm từ mới.',
@@ -46,6 +46,16 @@
       stat_xp: 'tổng XP',
       stat_mastered: 'từ đã thuộc',
       stat_due: 'từ cần ôn hôm nay',
+      progress_heading: 'Tiến độ học',
+      state_new: 'Mới',
+      state_learning: 'Đang học',
+      state_review: 'Ôn tập',
+      state_mastered: 'Đã thuộc',
+      state_leech: 'Từ yếu',
+      forecast_today: 'Hôm nay: {n} từ đến hạn',
+      forecast_tomorrow: ' · Ngày mai: {n}',
+      forecast_week: ' · 7 ngày tới: {n}',
+      new_cards_today: 'Từ mới hôm nay: {learned}/{limit}',
       units_heading: 'Các Unit',
       filter_all: 'Tất cả',
       filter_learning: 'Đang học',
@@ -68,12 +78,32 @@
       set_rate_sub: 'Hiện tại',
       set_voice: 'Giọng đọc (Web Speech)',
       set_voice_sub: 'Dùng khi không có audio từ điển. ★ = giọng tự nhiên',
+      set_new_cards: 'Từ mới mỗi ngày',
+      set_new_cards_sub: 'Giới hạn số từ mới học trong ngày (5–50)',
+      set_retention: 'Mức nhớ mục tiêu',
+      set_retention_sub: 'Cao hơn = ôn dày hơn, nhớ chắc hơn. Mặc định 90%',
+      set_hide_leech: 'Ẩn từ yếu (leech)',
+      set_hide_leech_sub: 'Không đưa từ quên quá nhiều vào Review Today',
+      set_reminders: 'Nhắc học mỗi ngày',
+      set_reminders_sub: 'Thông báo khi có từ đến hạn (cần cấp quyền)',
+      set_reminder_hour: 'Giờ nhắc',
+      set_reminder_hour_sub: 'Khung giờ gợi ý ôn tập trong ngày',
+      weak_heading: 'Từ yếu',
+      weak_hint: 'Những từ bạn quên nhiều hoặc sắp quên — nên ôn riêng.',
+      review_weak_btn: 'Ôn từ yếu',
+      due_words_heading: 'Từ đến hạn',
+      review_empty_title: 'Hôm nay không còn từ nào cần ôn',
+      review_empty_body: 'Hãy học thêm từ mới ở một Unit, các từ sẽ xuất hiện ở đây khi đến hạn.',
+      toast_reminders_on: 'Đã bật nhắc học. Hãy cho phép thông báo nếu được hỏi.',
+      toast_reminders_denied: 'Không có quyền thông báo. Bật trong cài đặt trình duyệt.',
+      notif_title: 'Đến giờ ôn từ vựng',
+      notif_body: 'Bạn có {n} từ cần ôn hôm nay. Ôn vài phút thôi!',
       set_accounts: 'Tài khoản học',
       set_accounts_sub: 'Nhiều hồ sơ trên máy này, không cần mật khẩu',
       manage_profiles: 'Quản lý hồ sơ',
       set_cloud: 'Đồng bộ đám mây',
-      set_cloud_sub: 'Đồng bộ tiến độ giữa các thiết bị qua Firebase',
-      cloud_anon: 'Bật đồng bộ (ẩn danh)',
+      set_cloud_sub: 'Dùng nhiều thiết bị: đăng nhập Google. Ẩn danh chỉ sao lưu cho trình duyệt này.',
+      cloud_anon: 'Sao lưu ẩn danh (chỉ trình duyệt này)',
       cloud_google: 'Đăng nhập Google',
       cloud_push: 'Đẩy lên cloud',
       cloud_pull: 'Tải về',
@@ -87,6 +117,13 @@
       toast_cloud_err: 'Đồng bộ thất bại. Kiểm tra mạng / cấu hình.',
       toast_cloud_in: 'Đã bật đồng bộ đám mây.',
       toast_cloud_out: 'Đã đăng xuất cloud.',
+      cloud_last_sync: 'lúc {time}',
+      toast_export_all: 'Đã xuất toàn bộ hồ sơ.',
+      set_diagnostics: 'Kiểm thử app',
+      set_diagnostics_sub: 'Kiểm tra 6 sách, FSRS, hồ sơ, cloud',
+      run_diagnostics: 'Chạy kiểm thử',
+      export_all_profiles: 'Xuất tất cả hồ sơ',
+      set_about: 'Về ứng dụng',
       set_backup: 'Sao lưu tiến độ',
       set_backup_sub: 'Xuất ra file JSON hoặc nhập lại từ file đã lưu',
       export_progress: 'Xuất tiến độ',
@@ -106,8 +143,8 @@
       ok: 'Đồng ý',
       levelup_kicker: 'Lên cấp!',
       continue: 'Tiếp tục',
-      ob_welcome_title: 'Chào mừng đến Word II',
-      ob_welcome_body: '600 từ thiết yếu (Book 2) với flashcard, quiz, truyện ngắn và thuật toán FSRS giúp bạn nhớ lâu hơn.',
+      ob_welcome_title: 'Chào mừng đến 4000 Essential English Words',
+      ob_welcome_body: 'Từ vựng thiết yếu theo từng Book với flashcard, quiz, truyện ngắn và thuật toán FSRS giúp bạn nhớ lâu hơn.',
       ob_fsrs_title: 'Đánh giá thẻ như thế nào?',
       ob_fsrs_body: 'Sau mỗi thẻ, chọn mức nhớ. App sẽ xếp lịch ôn lại đúng lúc bạn sắp quên.',
       ob_rate_again: 'Quên — ôn lại ngay',
@@ -120,17 +157,17 @@
       ob_tip_2: 'Đọc Story để gặp từ trong ngữ cảnh thật',
       ob_tip_3: 'Làm Unit Test khi thấy đã vững',
       ob_ready_title: 'Sẵn sàng bắt đầu?',
-      ob_ready_body: 'Bắt đầu với Unit 1 — The Twelve Months. Bạn có thể đổi hồ sơ và bật đồng bộ đám mây trong Cài đặt bất cứ lúc nào.',
+      ob_ready_body: 'Bắt đầu với Unit 1. Bạn có thể đổi sách ở trang chủ, đổi hồ sơ và bật đồng bộ đám mây trong Cài đặt bất cứ lúc nào.',
       ob_skip: 'Bỏ qua',
       ob_next: 'Tiếp tục',
       ob_start: 'Bắt đầu Unit 1',
-      install_title: 'Cài Word II vào máy',
+      install_title: 'Cài 4000 Words vào máy',
       install_sub: 'Học offline, mở nhanh từ màn hình chính',
       install_sub_ios: 'Trên iPhone: bấm Share → Thêm vào Màn hình chính',
       install_btn: 'Cài app',
       install_later: 'Để sau',
       set_install: 'Cài đặt ứng dụng',
-      set_install_sub: 'Thêm Word II vào màn hình chính để học offline',
+      set_install_sub: 'Thêm 4000 Words vào màn hình chính để học offline',
       toast_install_done: 'Đã cài app thành công.',
       toast_install_ios: 'iPhone: Share → Thêm vào Màn hình chính',
       toast_install_unavailable: 'Trình duyệt chưa hỗ trợ cài tự động. Dùng menu trình duyệt để “Cài ứng dụng”.',
@@ -202,7 +239,7 @@
     },
     en: {
       skip_link: 'Skip navigation',
-      brand_sub: 'Book 2 · Flashcard · FSRS',
+      brand_sub: 'Book 3 · Flashcard · FSRS',
       dash_title: 'Learn vocabulary that sticks',
       dash_greeting_due: 'You have {n} words due today. Review them to remember longer.',
       dash_greeting_ok: 'No words due today. Learn some new ones.',
@@ -217,6 +254,16 @@
       stat_xp: 'total XP',
       stat_mastered: 'words mastered',
       stat_due: 'due today',
+      progress_heading: 'Learning progress',
+      state_new: 'New',
+      state_learning: 'Learning',
+      state_review: 'Review',
+      state_mastered: 'Mastered',
+      state_leech: 'Weak',
+      forecast_today: 'Today: {n} due',
+      forecast_tomorrow: ' · Tomorrow: {n}',
+      forecast_week: ' · Next 7 days: {n}',
+      new_cards_today: 'New cards today: {learned}/{limit}',
       units_heading: 'Units',
       filter_all: 'All',
       filter_learning: 'Learning',
@@ -239,12 +286,32 @@
       set_rate_sub: 'Current',
       set_voice: 'Voice (Web Speech)',
       set_voice_sub: 'Used when dictionary audio is unavailable. ★ = natural voice',
+      set_new_cards: 'New cards per day',
+      set_new_cards_sub: 'Limit new words learned each day (5–50)',
+      set_retention: 'Target retention',
+      set_retention_sub: 'Higher = more reviews, stronger memory. Default 90%',
+      set_hide_leech: 'Hide weak (leech) words',
+      set_hide_leech_sub: 'Exclude frequently failed words from Review Today',
+      set_reminders: 'Daily study reminder',
+      set_reminders_sub: 'Notify when words are due (permission required)',
+      set_reminder_hour: 'Reminder hour',
+      set_reminder_hour_sub: 'Preferred time to review during the day',
+      weak_heading: 'Weak words',
+      weak_hint: 'Words you forget often or are about to forget — review them separately.',
+      review_weak_btn: 'Review weak',
+      due_words_heading: 'Due words',
+      review_empty_title: 'Nothing due today',
+      review_empty_body: 'Learn new words in a unit; they will show up here when due.',
+      toast_reminders_on: 'Reminders on. Allow notifications if prompted.',
+      toast_reminders_denied: 'Notification permission denied. Enable it in browser settings.',
+      notif_title: 'Time to review vocabulary',
+      notif_body: 'You have {n} words due today. A few minutes is enough!',
       set_accounts: 'Learner accounts',
       set_accounts_sub: 'Multiple local profiles on this device, no password',
       manage_profiles: 'Manage profiles',
       set_cloud: 'Cloud sync',
-      set_cloud_sub: 'Sync progress across devices via Firebase',
-      cloud_anon: 'Enable sync (anonymous)',
+      set_cloud_sub: 'For multiple devices use Google sign-in. Anonymous only backs up this browser.',
+      cloud_anon: 'Anonymous backup (this browser only)',
       cloud_google: 'Sign in with Google',
       cloud_push: 'Push to cloud',
       cloud_pull: 'Pull from cloud',
@@ -258,6 +325,13 @@
       toast_cloud_err: 'Sync failed. Check network / config.',
       toast_cloud_in: 'Cloud sync enabled.',
       toast_cloud_out: 'Signed out of cloud.',
+      cloud_last_sync: 'at {time}',
+      toast_export_all: 'All profiles exported.',
+      set_diagnostics: 'App diagnostics',
+      set_diagnostics_sub: 'Check 6 books, FSRS, profiles, cloud',
+      run_diagnostics: 'Run diagnostics',
+      export_all_profiles: 'Export all profiles',
+      set_about: 'About',
       set_backup: 'Backup progress',
       set_backup_sub: 'Export or import a JSON backup file',
       export_progress: 'Export progress',
@@ -277,8 +351,8 @@
       ok: 'OK',
       levelup_kicker: 'Level up!',
       continue: 'Continue',
-      ob_welcome_title: 'Welcome to Word II',
-      ob_welcome_body: '600 essential words (Book 2) with flashcards, quizzes, short stories, and FSRS scheduling so you remember longer.',
+      ob_welcome_title: 'Welcome to 4000 Essential English Words',
+      ob_welcome_body: 'Essential vocabulary book by book, with flashcards, quizzes, short stories, and FSRS scheduling so you remember longer.',
       ob_fsrs_title: 'How should you rate cards?',
       ob_fsrs_body: 'After each card, pick how well you recalled it. The app schedules the next review right before you forget.',
       ob_rate_again: 'Forgot — review again soon',
@@ -291,17 +365,17 @@
       ob_tip_2: 'Read the Story to see words in context',
       ob_tip_3: 'Take the Unit Test when you feel ready',
       ob_ready_title: 'Ready to start?',
-      ob_ready_body: 'Begin with Unit 1 — The Twelve Months. You can manage profiles and enable cloud sync in Settings anytime.',
+      ob_ready_body: 'Begin with Unit 1. Switch books on the home screen, and manage profiles or cloud sync in Settings anytime.',
       ob_skip: 'Skip',
       ob_next: 'Continue',
       ob_start: 'Start Unit 1',
-      install_title: 'Install Word II',
+      install_title: 'Install 4000 Words',
       install_sub: 'Study offline and open instantly from your home screen',
       install_sub_ios: 'On iPhone: tap Share → Add to Home Screen',
       install_btn: 'Install',
       install_later: 'Later',
       set_install: 'Install app',
-      set_install_sub: 'Add Word II to your home screen for offline study',
+      set_install_sub: 'Add 4000 Words to your home screen for offline study',
       toast_install_done: 'App installed.',
       toast_install_ios: 'iPhone: Share → Add to Home Screen',
       toast_install_unavailable: 'Auto-install is unavailable. Use the browser menu to install the app.',
@@ -420,14 +494,27 @@
   const SCHEMA_VERSION = 3;
   const DAY_MS = 24 * 60 * 60 * 1000;
 
-  /* FSRS v4.5 */
+  /* FSRS-5 (19 tham số mặc định) */
   const FSRS_W = [0.40255,1.18385,3.173,15.69105,7.1949,0.5345,1.4604,0.0046,1.54575,0.1192,1.01925,1.9395,0.11,0.29605,2.2698,0.2315,2.9898,0.51655,0.6621];
   const FSRS_REQUEST_RETENTION = 0.9;
   const FSRS_MAX_INTERVAL = 365;
   const FSRS_DECAY = -0.5;
   const FSRS_FACTOR = 19 / 81;
   const MASTERED_STABILITY = 21;
+  const MASTERED_MIN_REPS = 3;       // cần ít nhất 3 lần ôn mới tính là "đã thuộc"
+  const EASY_MIN_STABILITY = 7;      // gõ đúng chỉ tính Easy khi từ đã có nền (stability ≥ 7 ngày)
   const MAX_BOX = 5;
+  const LEECH_LAPSES = 4;            // số lần quên để đánh dấu leech
+  const LEECH_MIN_REPS = 6;          // cần tối thiểu số lần ôn mới tính leech
+  const DEFAULT_NEW_CARDS_PER_DAY = 20;
+  const LEARNING_STEP_MINUTES = 10;  // fallback bước Again (phút)
+  // Bước học ngắn cho từ MỚI / relearning (phút) trước khi “tốt nghiệp” sang FSRS dài hạn
+  // Tối ưu sách mới: thấy lại trong phiên + cùng ngày, tránh nhảy interval dài quá sớm
+  const LEARNING_STEPS_MIN = [1, 10];
+  const NEW_BOOK_SEEN_THRESHOLD = 40;     // dưới ngưỡng này coi như đang mở sách mới
+  const NEW_BOOK_SESSION_NEW_CAP = 8;     // mỗi phiên Unit tối đa N từ mới khi sách còn mới
+  const GRADUATE_MAX_DAYS_FIRST = 3;      // lần tốt nghiệp đầu: interval tối đa (ngày)
+  const LEARNING_EASY_SKIP = 1;           // Easy trong learning bỏ qua 1 bước
 
   const XP = {
     FLASHCARD_AGAIN: 0, FLASHCARD_HARD: 6, FLASHCARD_GOOD: 10, FLASHCARD_EASY: 12,
@@ -524,6 +611,11 @@
     d.setDate(d.getDate() - 1);
     return dateKey(d);
   }
+  function startOfToday() {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d.getTime();
+  }
   function endOfToday() {
     const d = new Date();
     d.setHours(23, 59, 59, 999);
@@ -549,12 +641,29 @@
   /* ========================================================================
      3. DỮ LIỆU
      ======================================================================== */
-  const DATA = typeof vocabularyData !== 'undefined' ? vocabularyData : null;
+  const BOOKS = [
+    { id: 'book1', label: 'Book 1', file: 'data-book1.js' },
+    { id: 'book2', label: 'Book 2', file: 'data-book2.js' },
+    { id: 'book3', label: 'Book 3', file: 'data-book3.js' },
+    { id: 'book4', label: 'Book 4', file: 'data-book4.js' },
+    { id: 'book5', label: 'Book 5', file: 'data-book5.js' },
+    { id: 'book6', label: 'Book 6', file: 'data-book6.js' }
+  ];
+  const DEFAULT_BOOK = 'book2';
+  let DATA = null;
+  let loadedBookId = null;
+  let booted = false;
+  const bookLoads = {};
   const unitsById = new Map();
   const wordsById = new Map();
   let allWords = [];
 
+  function bookInfo(id) { return BOOKS.find((b) => b.id === id) || BOOKS.find((b) => b.id === DEFAULT_BOOK) || BOOKS[0]; }
+  function isKnownBook(id) { return BOOKS.some((b) => b.id === id); }
+
   function indexData() {
+    unitsById.clear();
+    wordsById.clear();
     DATA.units.forEach((u) => {
       unitsById.set(u.id, u);
       u.words.forEach((w) => {
@@ -564,6 +673,37 @@
     });
     allWords = Array.from(wordsById.values());
   }
+
+  /** Nạp file dữ liệu của một sách (script đăng ký vào window.VOCAB_BOOKS[id]) */
+  function loadBookData(id) {
+    const reg = window.VOCAB_BOOKS || {};
+    if (reg[id]) return Promise.resolve(reg[id]);
+    if (bookLoads[id]) return bookLoads[id];
+    bookLoads[id] = new Promise((resolve, reject) => {
+      const el = document.createElement('script');
+      el.src = bookInfo(id).file;
+      el.async = true;
+      el.onload = () => {
+        const d = window.VOCAB_BOOKS && window.VOCAB_BOOKS[id];
+        if (d && Array.isArray(d.units)) resolve(d); else { delete bookLoads[id]; reject(new Error('empty book data')); }
+      };
+      el.onerror = () => { delete bookLoads[id]; reject(new Error('cannot load ' + id)); };
+      document.head.appendChild(el);
+    });
+    return bookLoads[id];
+  }
+
+  /** Đồng bộ: dùng dữ liệu sách đã nạp (trả false nếu chưa có) */
+  function useBookData(id) {
+    const d = window.VOCAB_BOOKS && window.VOCAB_BOOKS[id];
+    if (!d) return false;
+    DATA = d;
+    loadedBookId = id;
+    indexData();
+    return true;
+  }
+
+  function currentBookId() { return loadedBookId || DEFAULT_BOOK; }
 
   /* ========================================================================
      4. LƯU TRỮ — IndexedDB + multi-profile (Learner account)
@@ -586,7 +726,11 @@
   }
 
   function emptyUser() {
-    return { xp: 0, level: 1, streak: 0, lastStudyDate: null, totalWordsMastered: 0, completedUnits: [], unitTests: {} };
+    return {
+      xp: 0, level: 1, streak: 0, lastStudyDate: null, totalWordsMastered: 0,
+      completedUnits: [], unitTests: {},
+      recentAccuracies: [] // 5 phiên gần nhất (0–100), dùng cho học thích ứng
+    };
   }
 
   function emptySettings() {
@@ -596,7 +740,12 @@
       speechRate: 0.9,
       voice: '',
       lang: 'vi',
-      onboardingDone: false
+      onboardingDone: false,
+      newCardsPerDay: DEFAULT_NEW_CARDS_PER_DAY,
+      hideLeeches: false,
+      reminders: false,
+      reminderHour: 20,
+      retention: FSRS_REQUEST_RETENTION
     };
   }
 
@@ -615,8 +764,31 @@
       name: (name || 'Learner').trim().slice(0, 40) || 'Learner',
       createdAt: Date.now(),
       bestStreak: Math.max(0, user.streak || 0),
+      resetAt: 0,
+      book: currentBookId(),
+      shelf: {},
       user, progress, settings
     };
+  }
+
+  function emptySlice() { return { progress: {}, completedUnits: [], unitTests: {} }; }
+
+  function sanitizeSlice(raw) {
+    raw = raw && typeof raw === 'object' ? raw : {};
+    const u = sanitizeUser({ unitTests: raw.unitTests, completedUnits: raw.completedUnits });
+    return { progress: sanitizeProgressMap(raw.progress), completedUnits: u.completedUnits, unitTests: u.unitTests };
+  }
+
+  /** Mọi sách của một hồ sơ (sách đang học nằm ở p.progress/p.user, các sách khác ở p.shelf) */
+  function profileBooks(p) {
+    const out = {};
+    Object.entries(p.shelf || {}).forEach(([id, sl]) => { out[id] = sl; });
+    out[p.book || DEFAULT_BOOK] = {
+      progress: p.progress || {},
+      completedUnits: (p.user && p.user.completedUnits) || [],
+      unitTests: (p.user && p.user.unitTests) || {}
+    };
+    return out;
   }
 
   function sanitizeProgressMap(rawProgress) {
@@ -634,14 +806,14 @@
           lastReview: num(p.nextReview, 0) > 0 ? num(p.nextReview, 0) - stability * DAY_MS : 0,
           nextReview: num(p.nextReview, 0),
           state: box <= 1 ? 'learning' : 'review',
-          reps: Math.max(0, Math.round(num(p.correctStreak, 0))),
+          reps: Math.max(box >= 4 ? MASTERED_MIN_REPS : 0, Math.round(num(p.correctStreak, 0))),
           lapses: 0,
           correctStreak: Math.max(0, Math.round(num(p.correctStreak, 0)))
         };
         return;
       }
       if (!Number.isFinite(p.stability)) return;
-      progress[id] = {
+      const item = {
         difficulty: clamp(num(p.difficulty, 5), 1, 10),
         stability: Math.max(0.1, num(p.stability, 1)),
         lastReview: num(p.lastReview, 0),
@@ -649,8 +821,11 @@
         state: ['new', 'learning', 'review', 'relearning'].includes(p.state) ? p.state : 'review',
         reps: Math.max(0, Math.round(num(p.reps, 0))),
         lapses: Math.max(0, Math.round(num(p.lapses, 0))),
-        correctStreak: Math.max(0, Math.round(num(p.correctStreak, 0)))
+        correctStreak: Math.max(0, Math.round(num(p.correctStreak, 0))),
+        learningStep: Math.max(0, Math.round(num(p.learningStep, 0)))
       };
+      if (p.leech === true || (item.lapses >= LEECH_LAPSES && item.reps >= LEECH_MIN_REPS)) item.leech = true;
+      progress[id] = item;
     });
     return progress;
   }
@@ -670,13 +845,17 @@
       });
     }
     const xp = Math.max(0, num(u.xp, 0));
+    const recentAccuracies = Array.isArray(u.recentAccuracies)
+      ? u.recentAccuracies.map((x) => clamp(Math.round(num(x, 0)), 0, 100)).slice(-5)
+      : [];
     return {
       xp, level: levelFromXp(xp),
       streak: Math.max(0, Math.round(num(u.streak, 0))),
       lastStudyDate: typeof u.lastStudyDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(u.lastStudyDate) ? u.lastStudyDate : null,
       totalWordsMastered: 0, // recalculated below
       completedUnits: Array.isArray(u.completedUnits) ? u.completedUnits.filter(Number.isInteger) : [],
-      unitTests
+      unitTests,
+      recentAccuracies
     };
   }
 
@@ -692,7 +871,12 @@
       speechRate: clamp(num(s.speechRate, d.speechRate), 0.5, 1.4),
       voice: typeof s.voice === 'string' ? s.voice : '',
       lang: s.lang === 'en' ? 'en' : 'vi',
-      onboardingDone: typeof s.onboardingDone === 'boolean' ? s.onboardingDone : hasProgress
+      onboardingDone: typeof s.onboardingDone === 'boolean' ? s.onboardingDone : hasProgress,
+      newCardsPerDay: clamp(Math.round(num(s.newCardsPerDay, d.newCardsPerDay)), 5, 50),
+      hideLeeches: typeof s.hideLeeches === 'boolean' ? s.hideLeeches : d.hideLeeches,
+      reminders: typeof s.reminders === 'boolean' ? s.reminders : d.reminders,
+      reminderHour: clamp(Math.round(num(s.reminderHour, d.reminderHour)), 6, 22),
+      retention: clamp(num(s.retention, d.retention), 0.8, 0.95)
     };
   }
 
@@ -703,7 +887,7 @@
     if (raw.progress || raw.user) {
       const progress = sanitizeProgressMap(raw.progress);
       const user = sanitizeUser(raw.user);
-      user.totalWordsMastered = Object.values(progress).filter((p) => p.stability >= MASTERED_STABILITY).length;
+      user.totalWordsMastered = Object.values(progress).filter(isMastered).length;
       return { version: SCHEMA_VERSION, user, progress, settings: sanitizeSettings(raw.settings) };
     }
     return null;
@@ -718,20 +902,36 @@
         if (!p || typeof p !== 'object') return;
         const progress = sanitizeProgressMap(p.progress);
         const user = sanitizeUser(p.user);
-        user.totalWordsMastered = Object.values(progress).filter((x) => x.stability >= MASTERED_STABILITY).length;
+        user.totalWordsMastered = Object.values(progress).filter(isMastered).length;
         const pid = typeof p.id === 'string' ? p.id : id;
         profiles[pid] = {
           id: pid,
           name: (typeof p.name === 'string' && p.name.trim() ? p.name.trim() : 'Learner').slice(0, 40),
           createdAt: Number.isFinite(p.createdAt) ? p.createdAt : Date.now(),
           bestStreak: Math.max(0, Math.round(Number(p.bestStreak) || user.streak || 0)),
+          resetAt: Number.isFinite(p.resetAt) ? p.resetAt : 0,
+          book: isKnownBook(p.book) ? p.book : DEFAULT_BOOK,
+          shelf: {},
           user, progress, settings: sanitizeSettings(p.settings)
         };
+        const prof = profiles[pid];
+        if (p.shelf && typeof p.shelf === 'object') {
+          Object.entries(p.shelf).forEach(([bid, sl]) => {
+            if (bid !== prof.book && /^book\d+$/.test(bid)) prof.shelf[bid] = sanitizeSlice(sl);
+          });
+        }
       });
       if (!Object.keys(profiles).length) return null;
       let active = typeof raw.activeProfileId === 'string' ? raw.activeProfileId : null;
       if (!active || !profiles[active]) active = Object.keys(profiles)[0];
-      return { version: SCHEMA_VERSION, activeProfileId: active, profiles };
+      const deletedProfiles = {};
+      if (raw.deletedProfiles && typeof raw.deletedProfiles === 'object') {
+        Object.entries(raw.deletedProfiles).forEach(([k, v]) => { if (Number.isFinite(v)) deletedProfiles[k] = v; });
+      }
+      Object.keys(deletedProfiles).forEach((k) => { delete profiles[k]; });
+      if (!Object.keys(profiles).length) return null;
+      if (!profiles[active]) active = Object.keys(profiles)[0];
+      return { version: SCHEMA_VERSION, activeProfileId: active, profiles, deletedProfiles };
     }
     // Migrate single state → one profile
     const single = sanitizeState(raw);
@@ -792,8 +992,108 @@
       progress: p.progress,
       settings: p.settings
     };
-    state.user.totalWordsMastered = Object.values(state.progress).filter((x) => x.stability >= MASTERED_STABILITY).length;
+    state.user.totalWordsMastered = Object.values(state.progress).filter(isMastered).length;
     state.user.level = levelFromXp(state.user.xp);
+    syncBookForActiveProfile();
+  }
+
+  function activeBookId() {
+    const p = store && store.profiles[store.activeProfileId];
+    return (p && isKnownBook(p.book) && p.book) || DEFAULT_BOOK;
+  }
+
+  /** Hồ sơ đang dùng thuộc sách khác sách đang nạp → đổi dữ liệu cho khớp */
+  function syncBookForActiveProfile() {
+    if (!booted) return;
+    const want = activeBookId();
+    if (want === loadedBookId) return;
+    if (useBookData(want)) { refreshAfterBookChange(); return; }
+    loadBookData(want)
+      .then(() => { if (activeBookId() === want && useBookData(want)) refreshAfterBookChange(); })
+      .catch(() => toast('Không tải được dữ liệu ' + bookInfo(want).label + '.', 'error'));
+  }
+
+  function refreshAfterBookChange() {
+    if (!state) return;
+    app.session = null;
+    app.unitId = null;
+    state.user.totalWordsMastered = countMastered();
+    updateBookUI();
+    try { renderDashboard(); showScreen('dashboard'); } catch (e) { console.warn('[book] refresh', e); }
+  }
+
+  /** Số từ đã thuộc trong một slice sách (progress map) */
+  function sliceMastered(progress) {
+    return Object.values(progress || {}).filter(isMastered).length;
+  }
+
+  /** Tóm tắt tiến độ từng sách của hồ sơ đang active */
+  function bookProgressSummary(bookId) {
+    if (!store) return { mastered: 0, seen: 0, total: 600 };
+    const p = store.profiles[store.activeProfileId];
+    if (!p) return { mastered: 0, seen: 0, total: 600 };
+    const books = profileBooks(p);
+    const sl = books[bookId] || emptySlice();
+    const seen = Object.keys(sl.progress || {}).length;
+    const mastered = sliceMastered(sl.progress);
+    return { mastered, seen, total: 600 };
+  }
+
+  function updateBookUI() {
+    const info = bookInfo(loadedBookId || DEFAULT_BOOK);
+    const sub = byId('brand-sub');
+    if (sub) sub.textContent = info.label + ' · Flashcard · FSRS';
+    document.title = '4000 Essential English Words — ' + info.label;
+    const box = byId('book-switch');
+    if (!box) return;
+    box.textContent = '';
+    BOOKS.forEach((b) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'book-switch__btn' + (b.id === loadedBookId ? ' is-active' : '');
+      btn.dataset.action = 'switch-book';
+      btn.dataset.book = b.id;
+      const sum = bookProgressSummary(b.id);
+      const label = document.createElement('span');
+      label.className = 'book-switch__label';
+      label.textContent = b.label;
+      btn.appendChild(label);
+      if (sum.seen > 0) {
+        const meta = document.createElement('span');
+        meta.className = 'book-switch__meta';
+        meta.textContent = sum.mastered + '/' + sum.total;
+        btn.appendChild(meta);
+      }
+      btn.setAttribute('aria-pressed', b.id === loadedBookId ? 'true' : 'false');
+      btn.title = sum.seen > 0
+        ? (b.label + ': ' + sum.mastered + ' thuộc · ' + sum.seen + ' đã học')
+        : b.label;
+      box.appendChild(btn);
+    });
+  }
+
+  /** Người dùng đổi sách: cất kho tiến độ sách cũ vào shelf, lấy kho sách mới ra */
+  async function switchBook(id) {
+    if (!state || !store || !isKnownBook(id) || id === loadedBookId) return;
+    if (app.session) {
+      toast(currentLang() === 'en' ? 'Finish the current session first.' : 'Hãy kết thúc phiên học hiện tại trước khi đổi sách.', 'error');
+      return;
+    }
+    try { await loadBookData(id); }
+    catch (e) { toast('Không tải được dữ liệu ' + bookInfo(id).label + '. Kiểm tra kết nối rồi thử lại.', 'error'); return; }
+    writeStateIntoStore();
+    const p = store.profiles[store.activeProfileId];
+    p.shelf = p.shelf || {};
+    p.shelf[p.book || DEFAULT_BOOK] = { progress: p.progress, completedUnits: p.user.completedUnits, unitTests: p.user.unitTests };
+    const sl = p.shelf[id] || emptySlice();
+    delete p.shelf[id];
+    p.progress = sl.progress;
+    p.user.completedUnits = sl.completedUnits;
+    p.user.unitTests = sl.unitTests;
+    p.book = id;
+    applyActiveToState();
+    save();
+    toast((currentLang() === 'en' ? 'Switched to ' : 'Đã chuyển sang ') + bookInfo(id).label + '.', 'success');
   }
 
   function writeStateIntoStore() {
@@ -806,7 +1106,7 @@
     p.bestStreak = Math.max(p.bestStreak || 0, state.user.streak || 0, effectiveStreak());
   }
 
-  function save() {
+  function save(opts) {
     if (!state || !store) return;
     writeStateIntoStore();
     persistTheme(state.settings.darkMode);
@@ -820,7 +1120,7 @@
         }
       }
     });
-    scheduleCloudPush();
+    if (!(opts && opts.noCloud)) scheduleCloudPush();
   }
 
   async function loadStateAsync() {
@@ -858,12 +1158,22 @@
     auth: null,
     db: null,
     syncing: false,
-    pushTimer: null
+    pushTimer: null,
+    lastSyncedAt: 0
   };
+  const APP_VERSION = '3.1.0'; // Giai đoạn 1–3: FSRS+, dashboard, weak words, adaptive, reminders, polish
 
   function cloudConfigured() {
     const c = window.FIREBASE_CONFIG || {};
     return !!(c.apiKey && c.projectId && c.appId);
+  }
+
+  function formatSyncTime(ts) {
+    if (!ts) return '';
+    try {
+      const d = new Date(ts);
+      return pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ' ' + pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1);
+    } catch (e) { return ''; }
   }
 
   function updateCloudUI() {
@@ -886,7 +1196,9 @@
     if (cloud.syncing) {
       status.textContent = t('cloud_status_syncing');
     } else if (cloud.user) {
-      status.textContent = t('cloud_status_on') + (cloud.user.isAnonymous ? ' · ẩn danh' : '');
+      let msg = t('cloud_status_on') + (cloud.user.isAnonymous ? ' · ẩn danh (không dùng được trên máy khác)' : '');
+      if (cloud.lastSyncedAt) msg += ' · ' + t('cloud_last_sync', { time: formatSyncTime(cloud.lastSyncedAt) });
+      status.textContent = msg;
     } else {
       status.textContent = t('cloud_status_off');
     }
@@ -908,7 +1220,7 @@
       return;
     }
     try {
-      const [{ initializeApp }, { getAuth, onAuthStateChanged, signInAnonymously, signInWithPopup, GoogleAuthProvider, signOut }, { getFirestore, doc, getDoc, setDoc }] =
+      const [{ initializeApp }, { getAuth, onAuthStateChanged, signInAnonymously, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut }, { getFirestore, doc, getDoc, setDoc }] =
         await Promise.all([
           import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js'),
           import('https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js'),
@@ -923,6 +1235,7 @@
       cloud._setDoc = setDoc;
       cloud._signInAnonymously = signInAnonymously;
       cloud._signInWithPopup = signInWithPopup;
+      cloud._signInWithRedirect = signInWithRedirect;
       cloud._GoogleAuthProvider = GoogleAuthProvider;
       cloud._signOut = signOut;
       cloud.ready = true;
@@ -931,10 +1244,15 @@
         cloud.user = user;
         updateCloudUI();
         if (user) {
-          // Auto pull once when session restores
-          cloudPull({ silent: true }).catch(() => {});
+          // Tự đồng bộ khi phiên đăng nhập được khôi phục / vừa đăng nhập (chỉ 1 lần, có hàng đợi)
+          const verbose = cloud.verbosePull;
+          cloud.verbosePull = false;
+          cloudPull({ silent: !verbose }).catch(() => {});
         }
       });
+      // Kết quả đăng nhập kiểu redirect (iOS PWA). Không có redirect đang chờ thì trả về null.
+      getRedirectResult(cloud.auth).then((r) => { if (r && r.user) toast(t('toast_cloud_in'), 'success'); })
+        .catch((e) => toast(cloudErrorMessage(e), 'error'));
     } catch (e) {
       console.warn('[cloud] init failed', e);
       cloud.ready = false;
@@ -953,75 +1271,213 @@
       version: SCHEMA_VERSION,
       updatedAt: Date.now(),
       activeProfileId: store.activeProfileId,
-      profiles: store.profiles
+      profiles: store.profiles,
+      deletedProfiles: store.deletedProfiles || {}
     };
   }
 
-  function mergeCloudStore(localStore, remote) {
-    if (!remote || !remote.profiles) return localStore;
-    const out = {
-      version: Math.max(localStore.version || 1, remote.version || 1),
-      activeProfileId: localStore.activeProfileId,
-      profiles: { ...localStore.profiles }
-    };
+  // Hồ sơ "trắng": chưa học gì ở bất kỳ sách nào
+  function isPristineProfile(p) {
+    if (!p) return false;
+    const anyProgress = Object.values(profileBooks(p)).some((bk) => Object.keys(bk.progress || {}).length);
+    return !anyProgress && !((p.user && p.user.xp) || 0) && !(p.user && p.user.lastStudyDate);
+  }
 
-    Object.entries(remote.profiles || {}).forEach(([id, rp]) => {
-      const lp = out.profiles[id];
-      if (!lp) {
-        out.profiles[id] = rp;
-        return;
-      }
-      // Merge progress: higher stability wins
-      const progress = { ...(lp.progress || {}) };
-      Object.entries(rp.progress || {}).forEach(([wid, rpItem]) => {
-        const cur = progress[wid];
-        if (!cur || (rpItem.stability > cur.stability) ||
-            (rpItem.stability === cur.stability && (rpItem.lastReview || 0) > (cur.lastReview || 0))) {
-          progress[wid] = rpItem;
-        }
-      });
-      const lu = lp.user || emptyUser();
-      const ru = rp.user || emptyUser();
-      out.profiles[id] = {
-        ...lp,
-        name: lp.name || rp.name,
-        bestStreak: Math.max(lp.bestStreak || 0, rp.bestStreak || 0, lu.streak || 0, ru.streak || 0),
-        user: {
-          ...lu,
-          xp: Math.max(lu.xp || 0, ru.xp || 0),
-          level: Math.max(lu.level || 1, ru.level || 1),
-          streak: Math.max(lu.streak || 0, ru.streak || 0),
-          lastStudyDate: (lu.lastStudyDate || '') >= (ru.lastStudyDate || '') ? lu.lastStudyDate : ru.lastStudyDate,
-          totalWordsMastered: Math.max(lu.totalWordsMastered || 0, ru.totalWordsMastered || 0),
-          completedUnits: Array.from(new Set([...(lu.completedUnits || []), ...(ru.completedUnits || [])])),
-          unitTests: { ...(ru.unitTests || {}), ...(lu.unitTests || {}) }
-        },
-        progress,
-        settings: { ...(rp.settings || {}), ...(lp.settings || {}) }
+  // Với cùng một từ: bản được ôn gần nhất thắng (để "Again" không bị bản cũ có stability cao ghi đè).
+  function newerProgress(a, b) {
+    const la = a.lastReview || 0, lb = b.lastReview || 0;
+    if (la !== lb) return la > lb ? a : b;
+    return (b.stability || 0) > (a.stability || 0) ? b : a;
+  }
+
+  // Chỉ phần dùng chung giữa các sách: XP, level, streak
+  function mergeShared(lu, ru) {
+    return {
+      ...lu,
+      xp: Math.max(lu.xp || 0, ru.xp || 0),
+      level: Math.max(lu.level || 1, ru.level || 1),
+      streak: Math.max(lu.streak || 0, ru.streak || 0),
+      lastStudyDate: (lu.lastStudyDate || '') >= (ru.lastStudyDate || '') ? lu.lastStudyDate : ru.lastStudyDate,
+      totalWordsMastered: Math.max(lu.totalWordsMastered || 0, ru.totalWordsMastered || 0)
+    };
+  }
+
+  function mergeUnitTests(a, b) {
+    const out = { ...(a || {}) };
+    Object.entries(b || {}).forEach(([id, t]) => {
+      const c = out[id];
+      if (!c) { out[id] = t; return; }
+      out[id] = {
+        best: Math.max(c.best || 0, t.best || 0),
+        attempts: Math.max(c.attempts || 0, t.attempts || 0),
+        passed: !!(c.passed || t.passed)
       };
     });
     return out;
   }
 
-  async function cloudPush({ silent } = {}) {
-    if (!cloud.ready || !cloud.user) return;
-    const ref = cloudDocRef();
-    if (!ref) return;
-    cloud.syncing = true;
-    updateCloudUI();
-    try {
-      await cloud._setDoc(ref, buildCloudPayload(), { merge: false });
-      if (!silent) toast(t('toast_cloud_ok'), 'success');
-    } catch (e) {
-      console.warn('[cloud] push', e);
-      if (!silent) toast(t('toast_cloud_err'), 'error');
-    } finally {
-      cloud.syncing = false;
-      updateCloudUI();
-    }
+  // Merge kho tiến độ của một sách. Bên chưa "fresh" (chưa biết lần reset mới nhất) chỉ góp tiến độ sau mốc reset.
+  function mergeSlice(a, b, resetAt, aFresh, bFresh) {
+    const keep = (p) => resetAt === 0 || (p.lastReview || 0) > resetAt;
+    const progress = {};
+    [a, b].forEach((sl) => {
+      Object.entries(sl.progress || {}).forEach(([wid, p]) => {
+        if (!keep(p)) return;
+        progress[wid] = progress[wid] ? newerProgress(progress[wid], p) : p;
+      });
+    });
+    const done = new Set();
+    let tests = {};
+    [[a, aFresh], [b, bFresh]].forEach(([sl, fresh]) => {
+      if (!fresh) return;
+      (sl.completedUnits || []).forEach((u) => done.add(u));
+      tests = mergeUnitTests(tests, sl.unitTests);
+    });
+    return { progress, completedUnits: Array.from(done), unitTests: tests };
   }
 
-  async function cloudPull({ silent } = {}) {
+  function mergeCloudStore(localStore, remote) {
+    if (!remote || !remote.profiles) return localStore;
+
+    // Hồ sơ đã xóa (tombstone) trên bất kỳ thiết bị nào thì xóa ở mọi nơi
+    const deleted = { ...(localStore.deletedProfiles || {}) };
+    Object.entries(remote.deletedProfiles || {}).forEach(([id, ts]) => {
+      if (Number.isFinite(ts)) deleted[id] = Math.max(deleted[id] || 0, ts);
+    });
+
+    const out = {
+      version: Math.max(localStore.version || 1, remote.version || 1),
+      activeProfileId: localStore.activeProfileId,
+      profiles: { ...localStore.profiles },
+      deletedProfiles: deleted
+    };
+
+    const localActive = localStore.profiles[localStore.activeProfileId];
+    const localActiveWasPristine = isPristineProfile(localActive) && !(remote.profiles || {})[localStore.activeProfileId];
+
+    Object.entries(remote.profiles || {}).forEach(([id, rp]) => {
+      if (deleted[id]) return;
+      const lp = out.profiles[id];
+      if (!lp) { out.profiles[id] = rp; return; }
+
+      // Reset: lần xóa tiến độ mới nhất thắng; dữ liệu ôn trước mốc reset bị bỏ
+      const resetAt = Math.max(lp.resetAt || 0, rp.resetAt || 0);
+      const lFresh = (lp.resetAt || 0) === resetAt, rFresh = (rp.resetAt || 0) === resetAt;
+
+      // Từng sách một
+      const lb = profileBooks(lp), rb = profileBooks(rp);
+      const books = {};
+      new Set([...Object.keys(lb), ...Object.keys(rb)]).forEach((bid) => {
+        books[bid] = mergeSlice(lb[bid] || emptySlice(), rb[bid] || emptySlice(), resetAt, lFresh, rFresh);
+      });
+      const activeBook = lp.book || DEFAULT_BOOK;
+      const act = books[activeBook] || emptySlice();
+      delete books[activeBook];
+
+      const lu = lp.user || emptyUser();
+      const ru = rp.user || emptyUser();
+      let shared;
+      if (resetAt > 0) shared = lFresh && rFresh ? mergeShared(lu, ru) : (lFresh ? lu : ru);
+      else shared = mergeShared(lu, ru);
+      const user = { ...shared, completedUnits: act.completedUnits, unitTests: act.unitTests };
+
+      out.profiles[id] = {
+        ...lp,
+        name: lp.name || rp.name,
+        resetAt,
+        book: activeBook,
+        shelf: books,
+        bestStreak: Math.max(lp.bestStreak || 0, rp.bestStreak || 0, user.streak || 0),
+        user,
+        progress: act.progress,
+        settings: { ...(rp.settings || {}), ...(lp.settings || {}) }
+      };
+    });
+
+    Object.keys(deleted).forEach((id) => { delete out.profiles[id]; });
+
+    // Thiết bị mới: hồ sơ Learner trắng không được che mất tiến độ trên cloud
+    const remoteHasData = Object.values(remote.profiles || {}).some((p) => !isPristineProfile(p));
+    if (localActiveWasPristine && remoteHasData) {
+      delete out.profiles[localStore.activeProfileId];
+      const progressCount = (p) => Object.values(profileBooks(p)).reduce((n, bk) => n + Object.keys(bk.progress || {}).length, 0);
+      let pick = remote.activeProfileId;
+      if (!pick || !out.profiles[pick] || isPristineProfile(out.profiles[pick])) {
+        pick = Object.keys(out.profiles).sort((a, b) => progressCount(out.profiles[b]) - progressCount(out.profiles[a]))[0];
+      }
+      out.activeProfileId = pick;
+    }
+    if (!out.profiles[out.activeProfileId]) out.activeProfileId = Object.keys(out.profiles)[0];
+    return out;
+  }
+
+  // Áp bản đã merge vào app (đồng bộ, không đẩy lại cloud để tránh vòng lặp)
+  function adoptMergedStore(merged) {
+    const clean = sanitizeStore(merged);
+    if (!clean) return;
+    store = clean;
+    applyActiveToState();
+    save({ noCloud: true });
+    try {
+      applyTheme(); syncSettingsUI(); applyUILanguage();
+      renderDashboard();
+      if (app.screen === 'unit') renderUnitHub();
+      if (app.screen === 'review') renderReview();
+      if (byId('modal-profiles') && !byId('modal-profiles').hidden) renderProfileList();
+    } catch (e) { console.warn('[cloud] refresh UI', e); }
+  }
+
+  // Xếp hàng các thao tác cloud để push/pull không chạy chồng nhau
+  let cloudChain = Promise.resolve();
+  function cloudExclusive(fn) {
+    const run = cloudChain.then(fn, fn);
+    cloudChain = run.catch(() => {});
+    return run;
+  }
+
+  /** Đổi lỗi Firebase thành thông báo dễ hiểu (tiếng Việt). */
+  function cloudErrorMessage(e) {
+    const code = (e && (e.code || e.message)) ? String(e.code || '') : '';
+    const msg = (e && e.message) ? String(e.message) : '';
+    if (code.includes('permission-denied') || msg.includes('Missing or insufficient permissions')) {
+      return 'Firestore từ chối quyền. Kiểm tra Rules (users/{uid}/...).';
+    }
+    if (code.includes('auth/operation-not-allowed') || msg.includes('operation-not-allowed')) {
+      return 'Chưa bật phương thức đăng nhập (Anonymous/Google) trong Firebase Auth.';
+    }
+    if (code.includes('auth/unauthorized-domain') || msg.includes('unauthorized-domain')) {
+      return 'Domain chưa được phép. Thêm domain GitHub Pages vào Authorized domains.';
+    }
+    if (code.includes('auth/popup-blocked') || msg.includes('popup-blocked')) {
+      return 'Trình duyệt chặn popup. Cho phép popup rồi thử lại.';
+    }
+    if (code.includes('auth/popup-closed-by-user') || msg.includes('popup-closed-by-user')) {
+      return 'Bạn đã đóng cửa sổ đăng nhập.';
+    }
+    if (code.includes('auth/network-request-failed') || code.includes('unavailable') || msg.includes('network')) {
+      return 'Lỗi mạng. Kiểm tra kết nối internet.';
+    }
+    if (code.includes('not-found') || msg.includes('404')) {
+      return 'Chưa tạo Firestore Database trong Firebase Console.';
+    }
+    if (code.includes('invalid-api-key') || msg.includes('api-key')) {
+      return 'apiKey Firebase không đúng. Kiểm tra firebase-config.js.';
+    }
+    if (!cloudConfigured()) {
+      return t('cloud_need_config');
+    }
+    return t('toast_cloud_err') + (code ? ' (' + code + ')' : '');
+  }
+
+  // Push = kéo bản cloud về, merge, rồi mới ghi lên (không còn ghi đè mù làm mất tiến độ thiết bị khác)
+  function cloudPush({ silent } = {}) {
+    return cloudExclusive(() => cloudSync({ silent, announce: 'push' }));
+  }
+  function cloudPull({ silent } = {}) {
+    return cloudExclusive(() => cloudSync({ silent, announce: 'pull' }));
+  }
+
+  async function cloudSync({ silent, announce }) {
     if (!cloud.ready || !cloud.user) return;
     const ref = cloudDocRef();
     if (!ref) return;
@@ -1029,24 +1485,16 @@
     updateCloudUI();
     try {
       const snap = await cloud._getDoc(ref);
-      if (!snap.exists()) {
-        // First time: push local up
-        await cloud._setDoc(ref, buildCloudPayload());
-        if (!silent) toast(t('toast_cloud_ok'), 'success');
-        return;
+      if (snap.exists()) {
+        adoptMergedStore(mergeCloudStore(store, snap.data()));
       }
-      const remote = snap.data();
-      const merged = mergeCloudStore(store, remote);
-      store = sanitizeStore(merged) || store;
-      applyActiveToState();
-      save();
-      // refresh UI if helpers exist
-      try { if (typeof renderDashboard === 'function') renderDashboard(); } catch (e) {}
-      try { if (typeof updateHeaderStats === 'function') updateHeaderStats(); } catch (e) {}
-      if (!silent) toast(t('toast_cloud_pull'), 'success');
+      await cloud._setDoc(ref, buildCloudPayload());
+      cloud.lastSyncedAt = Date.now();
+      try { localStorage.setItem('eew-cloud-last-sync', String(cloud.lastSyncedAt)); } catch (e) {}
+      if (!silent) toast(t(announce === 'pull' && snap.exists() ? 'toast_cloud_pull' : 'toast_cloud_ok'), 'success');
     } catch (e) {
-      console.warn('[cloud] pull', e);
-      if (!silent) toast(t('toast_cloud_err'), 'error');
+      console.warn('[cloud] sync', e);
+      if (!silent) toast(cloudErrorMessage(e), 'error');
     } finally {
       cloud.syncing = false;
       updateCloudUI();
@@ -1066,12 +1514,13 @@
       return;
     }
     try {
+      cloud.verbosePull = true;
       await cloud._signInAnonymously(cloud.auth);
       toast(t('toast_cloud_in'), 'success');
-      await cloudPull({ silent: false });
     } catch (e) {
+      cloud.verbosePull = false;
       console.warn('[cloud] anon', e);
-      toast(t('toast_cloud_err'), 'error');
+      toast(cloudErrorMessage(e), 'error');
     }
   }
 
@@ -1081,14 +1530,24 @@
       toast(t('cloud_need_config'), 'error');
       return;
     }
+    const provider = new cloud._GoogleAuthProvider();
+    cloud.verbosePull = true;
     try {
-      const provider = new cloud._GoogleAuthProvider();
+      // iOS PWA (standalone) hay chặn popup → dùng redirect
+      if (isStandalone() && isIos()) {
+        await cloud._signInWithRedirect(cloud.auth, provider);
+        return;
+      }
       await cloud._signInWithPopup(cloud.auth, provider);
       toast(t('toast_cloud_in'), 'success');
-      await cloudPull({ silent: false });
     } catch (e) {
+      const code = String((e && e.code) || '');
+      if (code.includes('popup-blocked') || code.includes('operation-not-supported')) {
+        try { await cloud._signInWithRedirect(cloud.auth, provider); return; } catch (e2) { e = e2; }
+      }
+      cloud.verbosePull = false;
       console.warn('[cloud] google', e);
-      toast(t('toast_cloud_err'), 'error');
+      toast(cloudErrorMessage(e), 'error');
     }
   }
 
@@ -1100,7 +1559,7 @@
       updateCloudUI();
       toast(t('toast_cloud_out'), 'success');
     } catch (e) {
-      toast(t('toast_cloud_err'), 'error');
+      toast(cloudErrorMessage(e), 'error');
     }
   }
 
@@ -1144,7 +1603,7 @@
     if (state.user.level > before) showLevelUp(state.user.level);
   }
 
-  function isMastered(p) { return p && p.stability >= MASTERED_STABILITY; }
+  function isMastered(p) { return !!p && p.stability >= MASTERED_STABILITY && (p.reps || 0) >= MASTERED_MIN_REPS; }
   function countMastered() { return Object.values(state.progress).filter(isMastered).length; }
 
   function checkUnitComplete(unitId) {
@@ -1162,26 +1621,51 @@
 
   /* ========================================================================
      6. FSRS — Rating 1=Again 2=Hard 3=Good 4=Easy
+     + Leech detection, learning steps, new-card daily limit, better priority
      ======================================================================== */
   function getProgress(id) { return state.progress[id] || null; }
-  function isDue(id) { const p = getProgress(id); return !!p && p.nextReview <= endOfToday(); }
+  function isDue(id) {
+    const p = getProgress(id);
+    if (!p) return false;
+    if (state.settings.hideLeeches && isLeech(p)) return false;
+    return p.nextReview <= endOfToday();
+  }
+  function isLeech(p) {
+    return !!p && (p.lapses || 0) >= LEECH_LAPSES && (p.reps || 0) >= LEECH_MIN_REPS;
+  }
+  function markLeechIfNeeded(p) {
+    if (isLeech(p)) p.leech = true;
+    else if (p.leech && (p.lapses || 0) < LEECH_LAPSES) p.leech = false;
+  }
 
   function fsrsRetrievability(elapsedDays, stability) {
     if (stability <= 0) return 0;
     return Math.pow(1 + FSRS_FACTOR * elapsedDays / stability, FSRS_DECAY);
   }
-  function fsrsNextInterval(stability) {
-    const interval = stability / FSRS_FACTOR * (Math.pow(FSRS_REQUEST_RETENTION, 1 / FSRS_DECAY) - 1);
+  function getRetention() {
+    const r = state && state.settings ? state.settings.retention : null;
+    return clamp(Number.isFinite(r) ? r : FSRS_REQUEST_RETENTION, 0.8, 0.95);
+  }
+  function fsrsNextInterval(stability, retention) {
+    const rr = Number.isFinite(retention) ? retention : getRetention();
+    const interval = stability / FSRS_FACTOR * (Math.pow(rr, 1 / FSRS_DECAY) - 1);
     return Math.min(Math.max(1, Math.round(interval * 10) / 10), FSRS_MAX_INTERVAL);
+  }
+  // Fuzz ±5% cho khoảng ôn ≥ 3 ngày: tránh dồn nhiều thẻ vào cùng một ngày
+  function fuzzInterval(days) {
+    if (days < 3) return days;
+    const f = 1 + (Math.random() * 0.1 - 0.05);
+    return Math.min(FSRS_MAX_INTERVAL, Math.max(1, Math.round(days * f * 10) / 10));
   }
   function fsrsInitDifficulty(rating) {
     return clamp(FSRS_W[4] - Math.exp(FSRS_W[5] * (rating - 1)) + 1, 1, 10);
   }
   function fsrsInitStability(rating) { return Math.max(0.1, FSRS_W[rating - 1]); }
+  // FSRS-5: linear damping (càng gần 10 càng khó tăng) + hồi quy về D0(Easy)
   function fsrsNextDifficulty(d, rating) {
     const delta = -FSRS_W[6] * (rating - 3);
-    const d0 = fsrsInitDifficulty(3);
-    return clamp(FSRS_W[7] * d0 + (1 - FSRS_W[7]) * (d + delta), 1, 10);
+    const damped = d + delta * (10 - d) / 9;
+    return clamp(FSRS_W[7] * fsrsInitDifficulty(4) + (1 - FSRS_W[7]) * damped, 1, 10);
   }
   function fsrsNextStabilitySuccess(d, s, r, rating) {
     const hardPenalty = rating === 2 ? FSRS_W[15] : 1;
@@ -1191,58 +1675,351 @@
     return Math.max(0.1, s * (1 + factor));
   }
   function fsrsNextStabilityFail(d, s, r) {
-    return Math.max(0.1, FSRS_W[11] * Math.pow(d, -FSRS_W[12]) * (Math.pow(s + 1, FSRS_W[13]) - 1) * Math.exp(FSRS_W[14] * (1 - r)));
+    const sf = FSRS_W[11] * Math.pow(d, -FSRS_W[12]) * (Math.pow(s + 1, FSRS_W[13]) - 1) * Math.exp(FSRS_W[14] * (1 - r));
+    return Math.max(0.1, Math.min(sf, s)); // sau khi quên, stability không được lớn hơn trước đó
   }
 
-  function updateProgress(wordId, correct, strong = false, ratingOverride = null) {
+  /** Số từ mới đã học hôm nay (dùng để giới hạn new cards/day) */
+  function newCardsLearnedToday() {
+    const start = startOfToday();
+    let n = 0;
+    Object.values(state.progress).forEach((p) => {
+      if (p && p.reps === 1 && p.lastReview >= start) n++;
+    });
+    return n;
+  }
+
+  function isInLearning(p) {
+    return !!p && (p.state === 'learning' || p.state === 'relearning');
+  }
+
+  /** Sách hiện tại còn ít từ đã học → chế độ “sách mới” (nhẹ hơn, nhiều bước ngắn) */
+  function isNewBookMode() {
+    if (!state || !state.progress) return true;
+    return Object.keys(state.progress).length < NEW_BOOK_SEEN_THRESHOLD;
+  }
+
+  function learningStepsFor(p) {
+    // Sách mới: thêm một bước 1 ngày giữa 10 phút và FSRS dài hạn
+    if (isNewBookMode() || (p && p.state === 'relearning' && (p.lapses || 0) >= 2)) {
+      return [1, 10, 24 * 60]; // 1 phút → 10 phút → 1 ngày
+    }
+    return LEARNING_STEPS_MIN.slice();
+  }
+
+  function scheduleLearningStep(p, now) {
+    const steps = learningStepsFor(p);
+    const idx = clamp(p.learningStep || 0, 0, steps.length - 1);
+    const minutes = steps[idx] || LEARNING_STEP_MINUTES;
+    p.nextReview = now + minutes * 60 * 1000;
+  }
+
+  function graduateToReview(p, rating, now) {
+    p.state = 'review';
+    p.learningStep = 0;
+    // Stability nền khi tốt nghiệp: Soften Easy lần đầu
+    if (!p.stability || p.stability < 0.5) {
+      p.stability = fsrsInitStability(rating >= 4 ? 3 : rating);
+    }
+    let intervalDays = fsrsNextInterval(p.stability);
+    // Lần tốt nghiệp đầu (ít reps): không nhảy quá xa — quan trọng với sách mới
+    if ((p.reps || 0) <= 4 || isNewBookMode()) {
+      intervalDays = Math.min(intervalDays, GRADUATE_MAX_DAYS_FIRST);
+      if (rating === 2) intervalDays = Math.min(intervalDays, 1);
+      if (rating === 4) intervalDays = Math.min(Math.max(intervalDays, 2), GRADUATE_MAX_DAYS_FIRST);
+    }
+    p.nextReview = now + Math.max(1, intervalDays) * DAY_MS;
+  }
+
+  /**
+   * Tính trạng thái lịch ôn mới (hàm thuần, không ghi state) — dùng cho cả updateProgress
+   * lẫn xem trước khoảng ôn trên nút Again/Hard/Good/Easy.
+   * opts: fuzz (xáo nhẹ interval), gain (0–1: tỉ lệ tăng stability), noLapse (sai khi chưa đến hạn)
+   */
+  function computeSchedule(existing, rating, now, opts = {}) {
+    let p;
+    let graduated = false;
+    const gain = opts.gain == null ? 1 : opts.gain;
+
+    if (!existing) {
+      // —— Thẻ hoàn toàn mới ——
+      p = {
+        difficulty: fsrsInitDifficulty(rating),
+        stability: fsrsInitStability(Math.min(rating, 3)), // Easy lần đầu không inflate S quá
+        lastReview: now,
+        nextReview: 0,
+        state: 'learning',
+        learningStep: 0,
+        reps: 1,
+        lapses: rating === 1 ? 1 : 0,
+        correctStreak: rating >= 2 ? 1 : 0,
+        leech: false
+      };
+      if (rating === 1) {
+        p.state = 'relearning';
+        p.learningStep = 0;
+        scheduleLearningStep(p, now);
+      } else if (rating === 4 && !isNewBookMode()) {
+        p.learningStep = LEARNING_EASY_SKIP;
+        const steps = learningStepsFor(p);
+        if (p.learningStep >= steps.length) {
+          graduateToReview(p, rating, now);
+          graduated = true;
+        } else {
+          scheduleLearningStep(p, now);
+        }
+      } else {
+        p.learningStep = 0;
+        scheduleLearningStep(p, now);
+      }
+      return { p, graduated };
+    }
+
+    p = Object.assign({}, existing);
+
+    // Sai khi từ đang chờ trong learning (chưa đến hạn): quay về bước đầu, KHÔNG tính thêm lapse/rep
+    if (rating === 1 && opts.noLapse && isInLearning(p)) {
+      p.correctStreak = 0;
+      p.learningStep = 0;
+      scheduleLearningStep(p, now);
+      return { p, graduated: false };
+    }
+
+    const elapsed = p.lastReview > 0 ? Math.max(0, (now - p.lastReview) / DAY_MS) : 0;
+    const r = fsrsRetrievability(elapsed, p.stability);
+    p.reps = (p.reps || 0) + 1;
+    p.lastReview = now;
+
+    if (rating === 1) {
+      p.difficulty = fsrsNextDifficulty(p.difficulty, 1);
+      p.stability = fsrsNextStabilityFail(p.difficulty, p.stability, r);
+      p.correctStreak = 0;
+      p.lapses = (p.lapses || 0) + 1;
+      p.state = 'relearning';
+      p.learningStep = 0;
+      scheduleLearningStep(p, now);
+    } else if (isInLearning(p)) {
+      // —— Đang trong learning / relearning ——
+      p.difficulty = fsrsNextDifficulty(p.difficulty, rating);
+      const baseS = fsrsInitStability(rating);
+      p.stability = Math.max(p.stability || 0.1, baseS);
+      if (rating >= 3) {
+        p.stability = Math.max(p.stability, fsrsNextStabilitySuccess(p.difficulty, p.stability, Math.min(r, 0.9), rating) * 0.85);
+      }
+      p.correctStreak = (p.correctStreak || 0) + 1;
+      const steps = learningStepsFor(p);
+      let step = (p.learningStep || 0) + (rating === 4 ? (1 + LEARNING_EASY_SKIP) : 1);
+      if (rating === 2) step = (p.learningStep || 0); // Hard: lặp lại cùng bước
+      p.learningStep = step;
+      if (step >= steps.length) {
+        graduateToReview(p, rating, now);
+        graduated = true;
+      } else {
+        scheduleLearningStep(p, now);
+      }
+    } else {
+      // —— Review dài hạn (FSRS chuẩn) ——
+      p.difficulty = fsrsNextDifficulty(p.difficulty, rating);
+      const sNew = fsrsNextStabilitySuccess(p.difficulty, p.stability, r, rating);
+      p.stability = gain < 1 ? p.stability + (sNew - p.stability) * gain : sNew;
+      p.correctStreak = (p.correctStreak || 0) + 1;
+      p.state = 'review';
+      let intervalDays = fsrsNextInterval(p.stability);
+      if (opts.fuzz) intervalDays = fuzzInterval(intervalDays);
+      p.nextReview = now + intervalDays * DAY_MS;
+    }
+    return { p, graduated };
+  }
+
+  /**
+   * Ghi kết quả một lần ôn.
+   * - ratingOverride: người học tự chấm (flashcard) → luôn áp dụng lịch.
+   * - opts.rating: mức chấm do quiz suy ra (Hard khi gõ sai chính tả / dùng gợi ý).
+   * - opts.weak: bằng chứng yếu (trắc nghiệm) → stability chỉ tăng một nửa.
+   * - Câu trả lời ĐÚNG khi từ chưa đến hạn chỉ là luyện tập thêm: không đổi lịch,
+   *   để trả lời liên tiếp trong một phiên không "nhảy" qua các bước learning hay thổi phồng reps.
+   */
+  function updateProgress(wordId, correct, strong = false, ratingOverride = null, opts = {}) {
     const now = Date.now();
     const existing = getProgress(wordId);
+    const explicit = ratingOverride >= 1 && ratingOverride <= 4;
     let rating;
-    if (ratingOverride >= 1 && ratingOverride <= 4) rating = ratingOverride;
+    if (explicit) rating = ratingOverride;
+    else if (opts.rating >= 1 && opts.rating <= 4) rating = opts.rating;
     else if (!correct) rating = 1;
-    else if (strong) rating = 4;
+    else if (strong && existing && existing.stability >= EASY_MIN_STABILITY) rating = 4;
     else rating = 3;
 
-    let p;
-    if (!existing) {
-      p = {
-        difficulty: fsrsInitDifficulty(rating), stability: fsrsInitStability(rating),
-        lastReview: now, nextReview: 0,
-        state: rating === 1 ? 'relearning' : 'learning',
-        reps: 1, lapses: rating === 1 ? 1 : 0, correctStreak: rating >= 2 ? 1 : 0
-      };
-    } else {
-      p = Object.assign({}, existing);
-      const elapsed = p.lastReview > 0 ? Math.max(0, (now - p.lastReview) / DAY_MS) : 0;
-      const r = fsrsRetrievability(elapsed, p.stability);
-      if (rating === 1) {
-        p.difficulty = fsrsNextDifficulty(p.difficulty, 1);
-        p.stability = fsrsNextStabilityFail(p.difficulty, p.stability, r);
-        p.correctStreak = 0; p.lapses = (p.lapses || 0) + 1; p.state = 'relearning';
-      } else {
-        p.difficulty = fsrsNextDifficulty(p.difficulty, rating);
-        p.stability = fsrsNextStabilitySuccess(p.difficulty, p.stability, r, rating);
-        p.correctStreak = (p.correctStreak || 0) + 1; p.state = 'review';
-      }
-      p.reps = (p.reps || 0) + 1; p.lastReview = now;
+    // "Đến hạn" theo đúng định nghĩa của isDue: từ learning tính theo giờ, từ review tính theo ngày
+    const dueLimit = existing && isInLearning(existing) ? now : endOfToday();
+    if (!explicit && existing && rating >= 2 && (existing.nextReview || 0) > dueLimit) {
+      return { capped: false, leech: !!existing.leech, graduated: false, learning: isInLearning(existing), practice: true };
     }
-    const intervalDays = fsrsNextInterval(p.stability);
-    p.nextReview = now + (rating === 1 ? Math.min(intervalDays, 1) : intervalDays) * DAY_MS;
+
+    const noLapse = !explicit && rating === 1 && !!existing && isInLearning(existing) && (existing.nextReview || 0) > now;
+    const gain = opts.weak && existing && !isInLearning(existing) && rating >= 3 ? 0.5 : 1;
+    const { p, graduated } = computeSchedule(existing, rating, now, { fuzz: true, gain, noLapse });
+
+    markLeechIfNeeded(p);
     state.progress[wordId] = p;
     state.user.totalWordsMastered = countMastered();
     save();
-    checkUnitComplete(wordsById.get(wordId).unitId);
-    return { capped: false };
+    const w = wordsById.get(wordId);
+    if (w) checkUnitComplete(w.unitId);
+    return { capped: false, leech: !!p.leech, graduated, learning: isInLearning(p) };
+  }
+
+  /** Nhãn khoảng ôn kế tiếp cho từng mức đánh giá: "<1p", "10p", "3 ngày"… */
+  function fmtNextInterval(ms) {
+    const en = currentLang() === 'en';
+    const min = Math.round(ms / 60000);
+    if (min < 1) return en ? '<1m' : '<1p';
+    if (min < 60) return min + (en ? 'm' : 'p');
+    const hours = Math.round(min / 60);
+    if (hours < 24) return hours + (en ? 'h' : 'g');
+    const days = ms / DAY_MS;
+    if (days < 30) return Math.round(days) + (en ? 'd' : ' ngày');
+    if (days < 365) return (Math.round(days / 3) / 10) + (en ? 'mo' : ' tháng');
+    return '1 ' + (en ? 'yr' : 'năm');
+  }
+  function renderRatePreviews(word) {
+    const now = Date.now();
+    const existing = getProgress(word.id);
+    [['fc-again', 1], ['fc-hard', 2], ['fc-good', 3], ['fc-easy', 4]].forEach(([id, rating]) => {
+      const btn = byId(id);
+      if (!btn) return;
+      let el = btn.querySelector('.rate-next');
+      if (!el) {
+        el = document.createElement('small');
+        el.className = 'rate-next';
+        btn.appendChild(el);
+      }
+      const { p } = computeSchedule(existing, rating, now, {});
+      el.textContent = '→ ' + fmtNextInterval(Math.max(0, p.nextReview - now));
+    });
+  }
+
+  /** Sắp xếp ưu tiên: learning đến hạn → leech → overdue → stability thấp */
+  function duePriority(a, b) {
+    const pa = state.progress[a.id], pb = state.progress[b.id];
+    const learnA = isInLearning(pa) ? 1 : 0, learnB = isInLearning(pb) ? 1 : 0;
+    if (learnA !== learnB) return learnB - learnA;
+    const leechA = isLeech(pa) ? 1 : 0, leechB = isLeech(pb) ? 1 : 0;
+    if (leechA !== leechB) return leechB - leechA;
+    const overdueA = Date.now() - (pa.nextReview || 0);
+    const overdueB = Date.now() - (pb.nextReview || 0);
+    if (Math.abs(overdueA - overdueB) > 3600000) return overdueB - overdueA;
+    return (pa.stability || 1) - (pb.stability || 1);
   }
 
   function dueWords(unitId = null) {
     const pool = unitId == null ? allWords : unitsById.get(unitId).words;
-    return pool.filter(w => isDue(w.id)).sort((a, b) => state.progress[a.id].nextReview - state.progress[b.id].nextReview);
+    return pool.filter(w => isDue(w.id)).sort(duePriority);
   }
-  const newWords = (unitId) => unitsById.get(unitId).words.filter(w => !getProgress(w.id));
+
+  /** Giới hạn từ mới thích ứng + sách mới nhẹ hơn */
+  function effectiveNewCardLimit() {
+    let base = (state.settings && state.settings.newCardsPerDay) || DEFAULT_NEW_CARDS_PER_DAY;
+    if (isNewBookMode()) base = Math.min(base, 15); // sách mới: mặc định không vượt 15/ngày
+    const recent = (state.user && state.user.recentAccuracies) || [];
+    if (recent.length < 2) return base;
+    const avg = recent.reduce((a, b) => a + b, 0) / recent.length;
+    if (avg < 55) return Math.max(5, Math.round(base * 0.5));
+    if (avg < 70) return Math.max(5, Math.round(base * 0.75));
+    if (avg >= 90 && recent.length >= 3 && !isNewBookMode()) return Math.min(50, base + 5);
+    return base;
+  }
+
+  function newWords(unitId) {
+    const limit = effectiveNewCardLimit();
+    const learned = newCardsLearnedToday();
+    let remaining = Math.max(0, limit - learned);
+    // Mỗi phiên Unit khi sách mới: giới hạn thêm để tránh nhồi 20 từ một lúc
+    if (isNewBookMode()) remaining = Math.min(remaining, NEW_BOOK_SESSION_NEW_CAP);
+    const pool = unitsById.get(unitId).words.filter(w => !getProgress(w.id));
+    return pool.slice(0, remaining);
+  }
+
+  /** Xen kẽ due + new (1–2 due rồi 1 new) — tốt hơn all-due-then-all-new với sách mới */
+  function interleaveDueAndNew(due, neu) {
+    if (!neu.length) return due.slice();
+    if (!due.length) return neu.slice();
+    const out = [];
+    let i = 0, j = 0;
+    const dueRatio = isNewBookMode() ? 1 : 2; // sách mới: 1 due : 1 new
+    while (i < due.length || j < neu.length) {
+      for (let k = 0; k < dueRatio && i < due.length; k++) out.push(due[i++]);
+      if (j < neu.length) out.push(neu[j++]);
+    }
+    return out;
+  }
+
+  /** Rủi ro quên ước lượng 0–1 (dựa trên retrievability hiện tại) */
+  function forgetRisk(p) {
+    if (!p || !p.lastReview) return 0.5;
+    const elapsed = Math.max(0, (Date.now() - p.lastReview) / DAY_MS);
+    const r = fsrsRetrievability(elapsed, p.stability || 0.1);
+    return clamp(1 - r, 0, 1);
+  }
+
+  /** Từ yếu: leech hoặc stability thấp + đã quên ít nhất 1 lần, hoặc risk cao */
+  function isWeakWord(p) {
+    if (!p) return false;
+    if (isLeech(p)) return true;
+    if ((p.lapses || 0) >= 2 && (p.stability || 0) < 7) return true;
+    if ((p.reps || 0) >= 3 && forgetRisk(p) >= 0.45 && (p.stability || 0) < 14) return true;
+    return false;
+  }
+
+  function weakWords(limit = 40) {
+    return allWords
+      .filter((w) => isWeakWord(getProgress(w.id)))
+      .sort((a, b) => {
+        const pa = getProgress(a.id), pb = getProgress(b.id);
+        const la = isLeech(pa) ? 1 : 0, lb = isLeech(pb) ? 1 : 0;
+        if (la !== lb) return lb - la;
+        return forgetRisk(pb) - forgetRisk(pa);
+      })
+      .slice(0, limit);
+  }
+
+  function recordSessionAccuracy(accuracy) {
+    if (!state.user.recentAccuracies) state.user.recentAccuracies = [];
+    state.user.recentAccuracies.push(clamp(Math.round(accuracy), 0, 100));
+    if (state.user.recentAccuracies.length > 5) {
+      state.user.recentAccuracies = state.user.recentAccuracies.slice(-5);
+    }
+  }
+
+  function countByState() {
+    let neu = 0, learning = 0, review = 0, mastered = 0, leech = 0;
+    allWords.forEach((w) => {
+      const p = getProgress(w.id);
+      if (!p) { neu++; return; }
+      if (isLeech(p)) leech++;
+      if (isMastered(p)) mastered++;
+      else if (p.state === 'learning' || p.state === 'relearning' || (p.stability || 0) < 3) learning++;
+      else review++;
+    });
+    return { new: neu, learning, review, mastered, leech, total: allWords.length };
+  }
+
+  function forecastDue(days = 7) {
+    const now = Date.now();
+    const counts = new Array(days + 1).fill(0);
+    Object.values(state.progress).forEach((p) => {
+      if (!p || !p.nextReview) return;
+      if (state.settings.hideLeeches && isLeech(p)) return;
+      const d = Math.floor((p.nextReview - now) / DAY_MS);
+      if (d < 0) counts[0]++;
+      else if (d <= days) counts[d]++;
+    });
+    return counts;
+  }
 
   function stageOf(id) {
     const p = getProgress(id); if (!p) return 0;
+    if (isLeech(p)) return 0;
     const s = p.stability;
     if (s < 2) return 1; if (s < 7) return 2; if (s < 21) return 3; if (s < 60) return 4; return 5;
   }
@@ -1729,6 +2506,46 @@
     byId('dash-greeting').textContent = due > 0
       ? t('dash_greeting_due', { n: due })
       : t('dash_greeting_ok');
+
+    // Progress panel (Giai đoạn 1)
+    try {
+      const cs = countByState();
+      const total = Math.max(1, cs.total);
+      const setBar = (key, n) => {
+        const fill = byId('pbar-' + key);
+        const num = byId('pbar-' + key + '-n');
+        if (fill) fill.style.width = ((n / total) * 100).toFixed(1) + '%';
+        if (num) num.textContent = n;
+      };
+      setBar('new', cs.new);
+      setBar('learning', cs.learning);
+      setBar('review', cs.review);
+      setBar('mastered', cs.mastered);
+      setBar('leech', cs.leech);
+      const leechRow = byId('pbar-leech-row');
+      if (leechRow) leechRow.hidden = cs.leech === 0;
+
+      const fc = forecastDue(7);
+      const tomorrow = fc[1] || 0;
+      const week = fc.reduce((a, b) => a + b, 0);
+      const ft = byId('forecast-text');
+      if (ft) {
+        ft.textContent = t('forecast_today', { n: due })
+          + t('forecast_tomorrow', { n: tomorrow })
+          + t('forecast_week', { n: week });
+      }
+      const nct = byId('new-cards-today-text');
+      if (nct) {
+        nct.textContent = t('new_cards_today', { learned: newCardsLearnedToday(), limit: effectiveNewCardLimit() });
+      }
+      const weakAll = weakWords(99);
+      const dashWeak = byId('btn-dash-weak');
+      const dashWeakN = byId('dash-weak-count');
+      if (dashWeak) {
+        dashWeak.hidden = weakAll.length === 0;
+        if (dashWeakN) dashWeakN.textContent = weakAll.length;
+      }
+    } catch (e) { console.warn('[progress-panel]', e); }
   }
 
   function renderDashboard() {
@@ -1879,11 +2696,13 @@
 
   function renderReview() {
     const due = dueWords();
-    const empty = due.length === 0;
-    byId('review-summary').hidden = empty;
+    const weak = weakWords(30);
+    const empty = due.length === 0 && weak.length === 0;
+    byId('review-summary').hidden = due.length === 0;
     byId('review-empty').hidden = !empty;
-    byId('review-due-list').hidden = empty;
-    byId('review-due-list').previousElementSibling.hidden = empty;
+    byId('review-due-list').hidden = due.length === 0;
+    const dueHead = byId('review-due-list') && byId('review-due-list').previousElementSibling;
+    if (dueHead) dueHead.hidden = due.length === 0;
     byId('review-due-total').textContent = due.length;
 
     const counts = [0, 0, 0, 0, 0];
@@ -1895,6 +2714,17 @@
     });
 
     renderWordRows(byId('review-due-list'), due);
+
+    // Từ yếu (Giai đoạn 2)
+    const weakBlock = byId('review-weak-block');
+    const weakList = byId('review-weak-list');
+    const weakCount = byId('review-weak-count');
+    if (weakBlock && weakList) {
+      weakBlock.hidden = weak.length === 0;
+      if (weakCount) weakCount.textContent = weak.length;
+      if (weak.length) renderWordRows(weakList, weak);
+      else weakList.replaceChildren();
+    }
   }
 
   /* ========================================================================
@@ -1902,11 +2732,19 @@
      ======================================================================== */
   function startUnitFlashcard(unitId) {
     const unit = unitsById.get(unitId);
-    // Ưu tiên từ đến hạn, rồi từ mới (giữ thứ tự trong sách để dễ gắn với câu chuyện)
-    let words = shuffle(dueWords(unitId)).concat(newWords(unitId));
+    // Due (ưu tiên learning) xen kẽ từ mới — tối ưu sách mới, tránh nhồi 20 từ mới liên tục
+    const due = dueWords(unitId);
+    const neu = newWords(unitId);
+    let words = interleaveDueAndNew(due, neu);
     if (!words.length) {
       words = shuffle(unit.words);
-      toast('Bạn đã học hết từ mới. Đang luyện lại cả Unit.');
+      toast(currentLang() === 'en'
+        ? 'No new cards left in the daily limit. Reviewing the whole unit.'
+        : 'Hết suất từ mới trong ngày (hoặc unit). Đang luyện lại cả Unit.');
+    } else if (isNewBookMode() && neu.length) {
+      toast(currentLang() === 'en'
+        ? `New-book mode: ${neu.length} new words this session (short review steps).`
+        : `Chế độ sách mới: ${neu.length} từ mới phiên này (bước ôn ngắn).`, 'success');
     }
     prefetchWordAudio(words);
     startFlashcard(words, { unitId, review: false });
@@ -1918,7 +2756,7 @@
     startFlashcard(due, { unitId: null, review: true });
   }
 
-  /** Chọn từ cho phiên 5 phút: ưu tiên đến hạn → từ mới unit sớm → từ yếu */
+  /** Chọn từ cho phiên 5 phút: đến hạn → từ yếu → từ mới (thích ứng) → còn lại */
   function pickQuickWords() {
     const due = shuffle(dueWords());
     const picked = [];
@@ -1932,27 +2770,32 @@
       }
     };
     take(due);
-    // Từ mới theo thứ tự unit
+    // Ưu tiên từ yếu (kể cả chưa đến hạn) khi performance gần đây kém
+    const recent = (state.user.recentAccuracies || []);
+    const avg = recent.length ? recent.reduce((a, b) => a + b, 0) / recent.length : 80;
+    if (avg < 80) take(weakWords(QUICK_WORD_TARGET));
+    // Từ mới theo thứ tự unit (đã bị giới hạn thích ứng)
     const units = (DATA.units || []).slice().sort((a, b) => a.id - b.id);
     for (const u of units) {
       if (picked.length >= QUICK_WORD_TARGET) break;
       take(newWords(u.id));
     }
-    // Bổ sung từ đã học nhưng stability thấp
-    if (picked.length < QUICK_WORD_TARGET) {
-      const weak = allWords
-        .filter((w) => {
-          const p = getProgress(w.id);
-          return p && p.stability < 7 && !seen.has(w.id);
-        })
-        .sort((a, b) => (getProgress(a.id).stability || 0) - (getProgress(b.id).stability || 0));
-      take(shuffle(weak));
-    }
+    if (picked.length < QUICK_WORD_TARGET) take(weakWords(QUICK_WORD_TARGET));
     // Fallback: bất kỳ từ nào còn lại
     if (picked.length < Math.min(8, QUICK_WORD_TARGET)) {
       take(shuffle(allWords.filter((w) => !seen.has(w.id))));
     }
     return picked;
+  }
+
+  function startWeakFlashcard() {
+    const words = weakWords(REVIEW_FLASHCARD_MAX);
+    if (!words.length) {
+      toast(currentLang() === 'en' ? 'No weak words right now.' : 'Hiện không có từ yếu nào.', 'success');
+      return;
+    }
+    prefetchWordAudio(words);
+    startFlashcard(shuffle(words), { unitId: null, review: true });
   }
 
   let quickTimerId = null;
@@ -2025,6 +2868,8 @@
       cleared: 0,
       firstTryCorrect: 0,
       attempted: new Set(),
+      missed: [],
+      learningHits: {}, // id → số lần đưa lại trong phiên (tránh loop)
       startXp: state.user.xp,
       busy: false,
       unitId,
@@ -2068,10 +2913,17 @@
     );
     const prog = getProgress(w.id);
     if (!prog) byId('fc-box-badge').textContent = t('new_word');
-    else {
+    else if (isInLearning(prog)) {
+      const steps = learningStepsFor(prog);
+      const step = (prog.learningStep || 0) + 1;
+      byId('fc-box-badge').textContent = currentLang() === 'en'
+        ? ('Learning ' + step + '/' + steps.length)
+        : ('Đang học ' + step + '/' + steps.length);
+    } else {
       const days = prog.stability < 1 ? prog.stability.toFixed(1) : Math.round(prog.stability);
       byId('fc-box-badge').textContent = (currentLang() === 'en' ? ('S ≈ ' + days + 'd') : ('S ≈ ' + days + ' ngày'));
     }
+    renderRatePreviews(w);
     byId('fc-counter').textContent = `${s.cleared} / ${s.total}`;
     const pct = Math.round((s.cleared / s.total) * 100);
     byId('fc-progress-fill').style.width = pct + '%';
@@ -2102,13 +2954,28 @@
 
     if (rating === 1) {
       playSound('wrong');
-      s.queue.splice(Math.min(s.queue.length, 3), 0, word);
+      if (!s.missed.some((w) => w.id === word.id)) s.missed.push(word);
+      // Again: đưa lại sau 2–3 thẻ trong cùng phiên
+      s.queue.splice(Math.min(s.queue.length, 2 + Math.floor(Math.random() * 2)), 0, word);
     } else {
       const xpMap = { 2: XP.FLASHCARD_HARD, 3: XP.FLASHCARD_GOOD, 4: XP.FLASHCARD_EASY };
       addXp(xpMap[rating] || XP.FLASHCARD_GOOD);
       playSound('correct');
       s.cleared += 1;
       if (firstTime) s.firstTryCorrect += 1;
+      // Còn trong learning: xen lại trong phiên (tối đa 2 lần) — củng cố sách mới
+      const prog = getProgress(word.id);
+      const hits = (s.learningHits[word.id] || 0);
+      const maxHits = isNewBookMode() ? 2 : 1;
+      if (prog && isInLearning(prog) && !s.timeUp && hits < maxHits) {
+        const offset = Math.min(s.queue.length, rating === 2 ? 3 : (isNewBookMode() ? 5 : 8));
+        if (!s.queue.some((w) => w.id === word.id)) {
+          s.queue.splice(offset, 0, word);
+          s.learningHits[word.id] = hits + 1;
+          // total tăng nhẹ để progress bar không “xong ảo”
+          s.total = Math.max(s.total, s.cleared + s.queue.length);
+        }
+      }
     }
 
     // Đợi thẻ lật về mặt trước rồi mới đổi nội dung, tránh lộ từ kế tiếp
@@ -2158,14 +3025,22 @@
 
   function startReviewQuiz() {
     const due = shuffle(dueWords());
-    if (!due.length) { toast(t('toast_no_due')); return; }
-    let picked = due.slice(0, QUIZ_MAX);
-    // Ít hơn 10 từ đến hạn: bổ sung từ đã học để quiz đủ dài (không ảnh hưởng hộp Leitner)
+    const weak = weakWords(QUIZ_MAX);
+    if (!due.length && !weak.length) { toast(t('toast_no_due')); return; }
+    const seen = new Set();
+    let picked = [];
+    for (const w of due.concat(weak)) {
+      if (picked.length >= QUIZ_MAX) break;
+      if (seen.has(w.id)) continue;
+      seen.add(w.id);
+      picked.push(w);
+    }
+    // Ít hơn QUIZ_MIN: bổ sung từ đã học
     if (picked.length < QUIZ_MIN) {
-      const extra = shuffle(allWords.filter((w) => getProgress(w.id) && !picked.includes(w)));
+      const extra = shuffle(allWords.filter((w) => getProgress(w.id) && !seen.has(w.id)));
       picked = picked.concat(extra.slice(0, QUIZ_MIN - picked.length));
     }
-    startQuiz(picked, { unitId: null, review: true });
+    startQuiz(shuffle(picked), { unitId: null, review: true });
   }
 
   // Chọn từ để luyện: đến hạn trước, rồi từ mới, rồi từ có hộp thấp nhất
@@ -2239,14 +3114,23 @@
     renderQuestion();
   }
 
-  // Chọn 3 từ gây nhiễu: ưu tiên cùng Unit và cùng từ loại để câu hỏi không quá dễ
+  // Chọn 3 từ gây nhiễu "đáng ngờ": cùng từ loại, chính tả/độ dài gần, cùng chữ cái đầu,
+  // ưu tiên từ người học đã gặp (từ chưa học làm đáp án sai thì không công bằng). Có chút ngẫu nhiên để đa dạng.
   function pickDistractors(word) {
-    const sameUnit = shuffle(allWords.filter((w) => w.unitId === word.unitId && w.id !== word.id));
-    const others = shuffle(allWords.filter((w) => w.unitId !== word.unitId));
-    const pool = sameUnit.concat(others);
-    const samePos = pool.filter((w) => w.pos === word.pos);
-    const diffPos = pool.filter((w) => w.pos !== word.pos);
-    return samePos.concat(diffPos).slice(0, 3);
+    const lw = word.word.toLowerCase();
+    const scored = allWords.filter((w) => w.id !== word.id).map((w) => {
+      const lo = w.word.toLowerCase();
+      let sc = Math.random() * 0.8;
+      if (w.pos === word.pos) sc += 2;
+      if (w.unitId === word.unitId) sc += 0.8;
+      if (getProgress(w.id)) sc += 0.7;
+      if (lo[0] === lw[0]) sc += 0.5;
+      if (Math.abs(lo.length - lw.length) <= 1) sc += 0.3;
+      sc += (1 - Math.min(1, editDistance(lo, lw) / Math.max(lo.length, lw.length))) * 1.2;
+      return { w, sc };
+    });
+    scored.sort((a, b) => b.sc - a.sc);
+    return scored.slice(0, 3).map((x) => x.w);
   }
 
   /* ---- Tiện ích cho các dạng câu hỏi ---- */
@@ -2276,6 +3160,7 @@
     return answer.split('').map((ch, i) => (i < reveal || !/[a-z]/i.test(ch) ? ch : '_')).join(' ');
   }
 
+  const normUS = (s) => s.replace(/our(s|ed|ing)?$/, 'or$1').replace(/ise(s|d)?$/, 'ize$1').replace(/tre(s)?$/, 'ter$1');
   const normalizeAnswer = (s) => s.trim().toLowerCase().replace(/\s+/g, ' ');
 
   // Khoảng cách Levenshtein, dùng để báo "sai chính tả 1 ký tự"
@@ -2295,10 +3180,13 @@
     const a = normalizeAnswer(raw);
     const target = q.answer.toLowerCase();
     if (a === target) return { correct: true, note: '' };
+    // Chấp nhận biến thể Anh/Mỹ (colour/color, realise/realize, centre/center)
+    if (a && normUS(a) === normUS(target)) return { correct: true, note: 'Đúng (biến thể Anh/Mỹ).' };
+    // Biết từ nhưng sai dạng / sai 1 ký tự: tính là Hard (không phải quên hẳn) để không tạo lapse oan
     if ((q.word.forms || []).some((f) => f.toLowerCase() === a)) {
-      return { correct: false, note: `Đúng từ nhưng chưa đúng dạng, câu này cần "${q.answer}".` };
+      return { correct: false, typo: true, note: `Đúng từ nhưng chưa đúng dạng, câu này cần "${q.answer}".` };
     }
-    if (a && editDistance(a, target) === 1) return { correct: false, note: 'Gần đúng, bạn sai chính tả 1 ký tự.' };
+    if (a && editDistance(a, target) === 1) return { correct: false, typo: true, note: 'Gần đúng, bạn sai chính tả 1 ký tự.' };
     return { correct: false, note: '' };
   }
 
@@ -2578,7 +3466,7 @@
     ['quiz-submit', 'quiz-hint-btn', 'quiz-skip'].forEach((id) => { byId(id).disabled = true; });
     byId('quiz-hint').textContent = '';
     if (q.cloze) byId('quiz-blank').textContent = q.answer;
-    resolveQuestion(q, g.correct, { note: g.note });
+    resolveQuestion(q, g.correct, { note: g.note, typo: !!g.typo });
   }
 
   function giveHint() {
@@ -2655,7 +3543,7 @@
   }
 
   // Xử lý chung sau khi có kết quả: Leitner, XP, thống kê, phản hồi
-  function resolveQuestion(q, correct, { note = '' } = {}) {
+  function resolveQuestion(q, correct, { note = '', typo = false } = {}) {
     const s = app.session;
     q.answered = true;
     if (synth) synth.cancel();
@@ -2663,7 +3551,10 @@
     // "strong" = tự tạo câu trả lời và không dùng gợi ý thêm
     const strong = correct && STRONG_TYPES.has(q.type) && !q.hintsUsed;
     touchStudy();
-    const res = updateProgress(q.word.id, correct, strong);
+    const uopts = { weak: correct && q.kind === 'choice' };     // trắc nghiệm = bằng chứng yếu
+    if (correct && q.hintsUsed) uopts.rating = 2;              // đúng nhưng cần gợi ý → Hard
+    if (!correct && typo) uopts.rating = 2;                    // sai chính tả / sai dạng → Hard, không phải lapse
+    const res = updateProgress(q.word.id, correct, strong, null, uopts);
 
     const level = QUIZ_LEVEL[q.type];
     const lv = s.levels[level] || (s.levels[level] = { correct: 0, total: 0 });
@@ -2866,6 +3757,12 @@
     const testResult = isTest ? recordUnitTest(session.unitId, accuracy) : null;
     const gained = state.user.xp - session.startXp;
 
+    // Ghi nhận độ chính xác phiên → học thích ứng
+    if (!isTest && total >= 3) {
+      recordSessionAccuracy(accuracy);
+      save();
+    }
+
     let title;
     let subtitle;
     if (isTest) {
@@ -2896,6 +3793,17 @@
       subtitle = 'Các từ sai sẽ được ôn lại vào ngày mai.';
     }
 
+    // Gợi ý thích ứng nếu gần đây kém
+    const recent = (state.user.recentAccuracies || []);
+    if (recent.length >= 2) {
+      const avg = recent.reduce((a, b) => a + b, 0) / recent.length;
+      if (avg < 65) {
+        subtitle += currentLang() === 'en'
+          ? ' Tip: focus on weak words before adding many new ones.'
+          : ' Gợi ý: nên ôn từ yếu trước khi học thêm nhiều từ mới.';
+      }
+    }
+
     byId('result-title').textContent = title;
     byId('result-subtitle').textContent = subtitle;
     byId('result-score').textContent = `${correct} / ${total}`;
@@ -2913,8 +3821,17 @@
         .filter((k) => session.levels[k])
         .map((k) => `${k} ${session.levels[k].correct}/${session.levels[k].total}`);
       if (lv.length > 1 || session.kind === 'test') lines.push('Theo mức: ' + lv.join(' · '));
+      const missed = Array.from(new Set((session.missed || []).map((w) => w.word)));
+      if (missed.length) lines.push((currentLang() === 'en' ? 'Practice more: ' : 'Cần luyện thêm: ') + missed.join(', '));
+    } else if (mode === 'flashcard' && session.missed && session.missed.length) {
       const missed = Array.from(new Set(session.missed.map((w) => w.word)));
-      if (missed.length) lines.push('Cần luyện thêm: ' + missed.join(', '));
+      lines.push((currentLang() === 'en' ? 'Forgot this session: ' : 'Quên trong phiên này: ') + missed.join(', '));
+    }
+    const weakN = weakWords(5).length;
+    if (weakN > 0 && accuracy < 85) {
+      lines.push(currentLang() === 'en'
+        ? `You have ${weakWords(99).length} weak words — review them from Review Today.`
+        : `Bạn có ${weakWords(99).length} từ yếu — ôn chúng ở Review Today.`);
     }
     note.textContent = lines.join('\n');
     note.hidden = lines.length === 0;
@@ -2966,7 +3883,95 @@
     byId('set-dark').checked = s.darkMode;
     byId('set-rate').value = s.speechRate;
     byId('set-rate-value').textContent = s.speechRate.toFixed(2).replace(/0$/, '');
+    const nc = byId('set-new-cards');
+    const ncv = byId('set-new-cards-value');
+    if (nc) {
+      nc.value = s.newCardsPerDay || DEFAULT_NEW_CARDS_PER_DAY;
+      if (ncv) ncv.textContent = nc.value;
+    }
+    const rt = byId('set-retention');
+    if (rt) rt.value = String(Math.round((s.retention || FSRS_REQUEST_RETENTION) * 100) / 100);
+    const hl = byId('set-hide-leech');
+    if (hl) hl.checked = !!s.hideLeeches;
+    const rm = byId('set-reminders');
+    if (rm) rm.checked = !!s.reminders;
+    const rh = byId('set-reminder-hour');
+    const rhv = byId('set-reminder-hour-value');
+    if (rh) {
+      rh.value = s.reminderHour != null ? s.reminderHour : 20;
+      if (rhv) rhv.textContent = String(rh.value).padStart(2, '0') + ':00';
+    }
     if (synth) loadVoices();
+  }
+
+  /* ---- Nhắc học (Notification API) — Giai đoạn 2 ---- */
+  const REMINDER_LAST_KEY = 'eew-reminder-last';
+  let reminderTimerId = null;
+
+  async function enableReminders() {
+    if (!('Notification' in window)) {
+      toast(currentLang() === 'en' ? 'Notifications not supported on this device.' : 'Thiết bị không hỗ trợ thông báo.', 'error');
+      return false;
+    }
+    if (Notification.permission === 'granted') return true;
+    if (Notification.permission === 'denied') {
+      toast(t('toast_reminders_denied'), 'error');
+      return false;
+    }
+    try {
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') {
+        toast(t('toast_reminders_denied'), 'error');
+        return false;
+      }
+      return true;
+    } catch (e) {
+      toast(t('toast_reminders_denied'), 'error');
+      return false;
+    }
+  }
+
+  function canNotifyNow() {
+    if (!state || !state.settings.reminders) return false;
+    if (!('Notification' in window) || Notification.permission !== 'granted') return false;
+    const hour = state.settings.reminderHour != null ? state.settings.reminderHour : 20;
+    const now = new Date();
+    // Chỉ nhắc trong khoảng [hour, hour+2) và chưa nhắc hôm nay
+    if (now.getHours() < hour || now.getHours() >= hour + 2) return false;
+    try {
+      if (localStorage.getItem(REMINDER_LAST_KEY) === dateKey(now)) return false;
+    } catch (e) {}
+    const due = dueWords().length;
+    return due > 0;
+  }
+
+  function fireStudyReminder() {
+    if (!canNotifyNow()) return;
+    const n = dueWords().length;
+    try {
+      const note = new Notification(t('notif_title'), {
+        body: t('notif_body', { n }),
+        icon: 'icon-192.png',
+        badge: 'icon-96.png',
+        tag: 'eew-study-reminder'
+      });
+      note.onclick = () => {
+        window.focus();
+        note.close();
+        try { showScreen('review'); } catch (e) {}
+      };
+      localStorage.setItem(REMINDER_LAST_KEY, dateKey());
+    } catch (e) { console.warn('[reminder]', e); }
+  }
+
+  function scheduleReminderCheck() {
+    if (reminderTimerId) {
+      clearInterval(reminderTimerId);
+      reminderTimerId = null;
+    }
+    if (!state || !state.settings.reminders) return;
+    fireStudyReminder();
+    reminderTimerId = setInterval(fireStudyReminder, 15 * 60 * 1000);
   }
 
   /* ---- PWA install prompt ---- */
@@ -3139,6 +4144,13 @@
     syncSettingsUI();
     updateCloudUI();
     updateInstallUI();
+    const about = byId('about-version');
+    if (about) {
+      about.textContent = '4000 Essential English Words · v' + APP_VERSION
+        + ' · 6 books · FSRS · ' + (loadedBookId || DEFAULT_BOOK);
+    }
+    const diag = byId('diagnostics-out');
+    if (diag) { diag.hidden = true; diag.textContent = ''; }
     openModal(byId('modal-settings'));
   }
 
@@ -3151,11 +4163,13 @@
     const p = store.profiles[store.activeProfileId];
     return {
       version: SCHEMA_VERSION,
-      type: 'word-ii-profile',
+      type: 'eew-profile',
       exportedAt: new Date().toISOString(),
       profile: {
         name: p.name,
         bestStreak: p.bestStreak,
+        book: p.book || DEFAULT_BOOK,
+        shelf: p.shelf || {},
         user: p.user,
         progress: p.progress,
         settings: p.settings
@@ -3169,7 +4183,7 @@
     const a = document.createElement('a');
     a.href = url;
     const safe = (store.profiles[store.activeProfileId].name || 'profile').replace(/[^\w\-]+/g, '_').slice(0, 24);
-    a.download = `word-ii-${safe}-${dateKey()}.json`;
+    a.download = `eew-${safe}-${dateKey()}.json`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -3201,20 +4215,24 @@
     if (raw && raw.profile) {
       const st = sanitizeState(raw.profile);
       if (!st) return null;
-      return { kind: 'profile', name: raw.profile.name || 'Imported', state: st, bestStreak: raw.profile.bestStreak || st.user.streak };
+      const shelf = {};
+      if (raw.profile.shelf && typeof raw.profile.shelf === 'object') {
+        Object.entries(raw.profile.shelf).forEach(([bid, sl]) => { if (/^book\d+$/.test(bid)) shelf[bid] = sanitizeSlice(sl); });
+      }
+      // File xuất từ app cũ: word-iii-profile = Book 3, còn lại = Book 2
+      const book = isKnownBook(raw.profile.book) ? raw.profile.book : (raw.type === 'word-iii-profile' ? 'book3' : DEFAULT_BOOK);
+      return { kind: 'profile', name: raw.profile.name || 'Imported', state: st, book, shelf, bestStreak: raw.profile.bestStreak || st.user.streak };
     }
-    // Legacy single state
+    // Legacy single state (Book 2)
     const st = sanitizeState(raw);
     if (!st) return null;
-    return { kind: 'profile', name: 'Imported', state: st, bestStreak: st.user.streak };
+    return { kind: 'profile', name: 'Imported', state: st, book: DEFAULT_BOOK, shelf: {}, bestStreak: st.user.streak };
   }
 
   function mergeProgress(into, from) {
+    // Cùng quy tắc với đồng bộ cloud: bản được ôn gần nhất thắng (từ vừa quên không bị bản cũ ghi đè)
     Object.entries(from).forEach(([id, p]) => {
-      const cur = into[id];
-      if (!cur || (p.stability > cur.stability) || (p.reps > (cur.reps || 0) && p.stability >= cur.stability)) {
-        into[id] = p;
-      }
+      into[id] = into[id] ? newerProgress(into[id], p) : p;
     });
     return into;
   }
@@ -3262,6 +4280,12 @@
     });
     if (!ok) return;
 
+    // File thuộc sách khác sách đang mở → đổi sang sách đó trước
+    if (parsed.book && parsed.book !== loadedBookId) {
+      await switchBook(parsed.book);
+      if (loadedBookId !== parsed.book) return;
+    }
+
     if (mode === 'overwrite') {
       state.user = parsed.state.user;
       state.progress = parsed.state.progress;
@@ -3282,7 +4306,15 @@
       state.user.totalWordsMastered = countMastered();
     }
     const p = store.profiles[store.activeProfileId];
-    if (p) p.bestStreak = Math.max(p.bestStreak || 0, parsed.bestStreak || 0, state.user.streak);
+    if (p) {
+      p.bestStreak = Math.max(p.bestStreak || 0, parsed.bestStreak || 0, state.user.streak);
+      // Các sách khác trong file: ghi đè hoặc merge vào shelf
+      Object.entries(parsed.shelf || {}).forEach(([bid, sl]) => {
+        if (bid === p.book) return;
+        p.shelf = p.shelf || {};
+        p.shelf[bid] = mode === 'overwrite' || !p.shelf[bid] ? sl : mergeSlice(p.shelf[bid], sl, 0, true, true);
+      });
+    }
     save();
     applyTheme();
     syncSettingsUI();
@@ -3304,7 +4336,7 @@
   async function resetProgress() {
     const ok = await confirmDialog({
       title: 'Xóa tiến độ hồ sơ này?',
-      text: 'XP, level, streak và tiến độ từng từ của hồ sơ đang dùng sẽ bị xóa. Hồ sơ khác không bị ảnh hưởng.',
+      text: 'XP, level, streak và tiến độ từng từ của TẤT CẢ các sách trong hồ sơ đang dùng sẽ bị xóa. Hồ sơ khác không bị ảnh hưởng.',
       okLabel: 'Xóa tiến độ'
     });
     if (!ok) return;
@@ -3312,7 +4344,7 @@
     state.user = fresh.user;
     state.progress = fresh.progress;
     const p = store.profiles[store.activeProfileId];
-    if (p) p.bestStreak = 0;
+    if (p) { p.bestStreak = 0; p.resetAt = Date.now(); p.shelf = {}; }
     save();
     renderDashboard();
     renderProfileList();
@@ -3333,7 +4365,7 @@
   }
 
   function profileMasteredCount(p) {
-    return Object.values(p.progress || {}).filter((x) => x && x.stability >= MASTERED_STABILITY).length;
+    return Object.values(profileBooks(p)).reduce((n, bk) => n + Object.values(bk.progress || {}).filter(isMastered).length, 0);
   }
 
   function renderProfileList() {
@@ -3347,11 +4379,12 @@
       .forEach((p) => {
         const isActive = p.id === store.activeProfileId;
         const mastered = profileMasteredCount(p);
-        const words = Object.keys(p.progress || {}).length;
         const streak = isActive ? effectiveStreak() : (p.user && p.user.streak) || 0;
-        const best = Math.max(p.bestStreak || 0, (p.user && p.user.streak) || 0);
         const xp = (p.user && p.user.xp) || 0;
         const level = (p.user && p.user.level) || levelFromXp(xp);
+        const bookLabel = bookInfo(p.book || DEFAULT_BOOK).label;
+        const shelfCount = Object.keys(p.shelf || {}).length;
+        const lastStudy = (p.user && p.user.lastStudyDate) || null;
 
         const li = document.createElement('li');
         li.className = 'profile-item' + (isActive ? ' is-active' : '');
@@ -3361,11 +4394,15 @@
         main.className = 'profile-item__main';
         const name = document.createElement('span');
         name.className = 'profile-item__name';
-        name.textContent = p.name + (isActive ? '' : '');
+        name.textContent = p.name;
         main.appendChild(name);
         const meta = document.createElement('span');
         meta.className = 'profile-item__meta';
-        meta.textContent = t('profile_meta', { level: level, xp: xp, mastered: mastered, streak: streak });
+        let metaText = t('profile_meta', { level: level, xp: xp, mastered: mastered, streak: streak });
+        metaText += ' · ' + bookLabel;
+        if (shelfCount > 0) metaText += ' (+' + shelfCount + ' ' + (currentLang() === 'en' ? 'books' : 'sách') + ')';
+        if (lastStudy) metaText += ' · ' + lastStudy;
+        meta.textContent = metaText;
         main.appendChild(meta);
         li.appendChild(main);
 
@@ -3411,8 +4448,91 @@
     const line = byId('profile-streak-line');
     if (line && active) {
       const m = profileMasteredCount(active);
-      line.textContent = 'Tài khoản đang dùng: ' + active.name + ' · Streak ' + effectiveStreak() + ' · Best ' + Math.max(active.bestStreak || 0, active.user.streak || 0) + ' · ' + m + ' từ vững · ' + (active.user.xp || 0) + ' XP';
+      const books = profileBooks(active);
+      const bookBits = Object.keys(books).map((bid) => {
+        const sm = sliceMastered(books[bid].progress);
+        const seen = Object.keys(books[bid].progress || {}).length;
+        return bookInfo(bid).label + ' ' + sm + (seen ? ('/' + seen) : '');
+      }).join(' · ');
+      line.textContent = (currentLang() === 'en' ? 'Active: ' : 'Đang dùng: ')
+        + active.name + ' · Streak ' + effectiveStreak()
+        + ' · Best ' + Math.max(active.bestStreak || 0, active.user.streak || 0)
+        + ' · ' + m + (currentLang() === 'en' ? ' mastered' : ' từ vững')
+        + ' · ' + (active.user.xp || 0) + ' XP'
+        + (bookBits ? ('\n' + bookBits) : '');
     }
+  }
+
+  /** Xuất toàn bộ hồ sơ trên máy (store đầy đủ) */
+  function exportAllProfiles() {
+    writeStateIntoStore();
+    const payload = {
+      version: SCHEMA_VERSION,
+      type: 'eew-store',
+      exportedAt: new Date().toISOString(),
+      appVersion: APP_VERSION,
+      activeProfileId: store.activeProfileId,
+      profiles: store.profiles
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'eew-all-profiles-' + dateKey() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    toast(t('toast_export_all'), 'success');
+  }
+
+  /** Kiểm thử dữ liệu 6 sách + FSRS helpers (Giai đoạn 3) */
+  function runDiagnostics() {
+    const lines = [];
+    let ok = true;
+    lines.push('App v' + APP_VERSION + ' · schema ' + SCHEMA_VERSION);
+    lines.push('Book đang mở: ' + (loadedBookId || '—') + ' · ' + allWords.length + ' từ');
+    BOOKS.forEach((b) => {
+      const d = window.VOCAB_BOOKS && window.VOCAB_BOOKS[b.id];
+      if (!d) {
+        lines.push('✗ ' + b.label + ': chưa nạp');
+        ok = false;
+        return;
+      }
+      const units = (d.units || []).length;
+      const words = (d.units || []).reduce((n, u) => n + ((u.words && u.words.length) || 0), 0);
+      const bad = (d.units || []).filter((u) => !u.words || u.words.length !== 20);
+      const mark = (units === 30 && words === 600 && !bad.length) ? '✓' : '✗';
+      if (mark === '✗') ok = false;
+      lines.push(mark + ' ' + b.label + ': ' + units + ' unit, ' + words + ' từ'
+        + (bad.length ? (' (unit lệch: ' + bad.map((u) => u.id).join(',') + ')') : ''));
+    });
+    // FSRS smoke test
+    try {
+      const s0 = fsrsInitStability(3);
+      const i0 = fsrsNextInterval(s0);
+      if (!(s0 > 0 && i0 >= 1)) { ok = false; lines.push('✗ FSRS init fail'); }
+      else lines.push('✓ FSRS OK (S₀≈' + s0.toFixed(2) + 'd, interval≈' + i0 + 'd)');
+    } catch (e) { ok = false; lines.push('✗ FSRS error: ' + e.message); }
+    // Storage
+    lines.push(store ? ('✓ Hồ sơ: ' + Object.keys(store.profiles).length + ' · active ' + (store.profiles[store.activeProfileId] && store.profiles[store.activeProfileId].name)) : '✗ Chưa có store');
+    lines.push(cloud.ready ? ('✓ Cloud sẵn sàng' + (cloud.user ? ' · đã đăng nhập' : ' · chưa đăng nhập')) : '· Cloud chưa cấu hình / chưa init');
+    const weakN = weakWords(99).length;
+    const dueN = dueWords().length;
+    lines.push('Due hôm nay: ' + dueN + ' · Từ yếu: ' + weakN + ' · Limit từ mới: ' + effectiveNewCardLimit());
+    const msg = lines.join('\n');
+    console.log('[diagnostics]\n' + msg);
+    toast(ok ? (currentLang() === 'en' ? 'Diagnostics OK — see console' : 'Kiểm thử OK — xem console') : (currentLang() === 'en' ? 'Issues found — see console' : 'Có lỗi — xem console'), ok ? 'success' : 'error');
+    // Hiện trong modal confirm đơn giản nếu có
+    const note = byId('result-note');
+    if (byId('modal-settings') && !byId('modal-settings').hidden) {
+      const diag = byId('diagnostics-out');
+      if (diag) {
+        diag.hidden = false;
+        diag.textContent = msg;
+      }
+    }
+    return ok;
   }
 
   function addProfile() {
@@ -3475,6 +4595,8 @@
     });
     if (!ok) return;
     delete store.profiles[id];
+    store.deletedProfiles = store.deletedProfiles || {};
+    store.deletedProfiles[id] = Date.now();
     if (store.activeProfileId === id) {
       store.activeProfileId = Object.keys(store.profiles)[0];
       applyActiveToState();
@@ -3519,6 +4641,7 @@
     'profile-copy-code': copyProfileCode,
     'profile-import': importFromTextarea,
     'profile-import-file': () => byId('profile-import-file').click(),
+    'switch-book': (el) => switchBook(el.dataset.book),
     'select-profile': (el) => selectProfile(el.dataset.id),
     'rename-profile': (el) => renameProfile(el.dataset.id),
     'delete-profile': (el) => deleteProfile(el.dataset.id),
@@ -3549,10 +4672,13 @@
     'popup-speak': () => { const w = wordsById.get(app.popupWordId); if (w) speak(w.word); },
     'review-flashcard': startReviewFlashcard,
     'review-quiz': startReviewQuiz,
+    'review-weak': startWeakFlashcard,
     'start-quick': startQuickStudy,
     'result-retry': retrySession,
     'export-progress': exportProgress,
+    'export-all-profiles': exportAllProfiles,
     'import-progress': () => byId('import-file').click(),
+    'run-diagnostics': runDiagnostics,
     'reset-progress': resetProgress,
     'cloud-sign-in-anon': cloudSignInAnon,
     'cloud-sign-in-google': cloudSignInGoogle,
@@ -3718,6 +4844,66 @@
       save();
       speak('Hello');
     });
+    const setRetention = byId('set-retention');
+    if (setRetention) {
+      setRetention.addEventListener('change', (e) => {
+        state.settings.retention = clamp(Number(e.target.value), 0.8, 0.95);
+        save();
+        renderStats();
+      });
+    }
+    const setNewCards = byId('set-new-cards');
+    if (setNewCards) {
+      setNewCards.addEventListener('input', (e) => {
+        const v = Number(e.target.value);
+        state.settings.newCardsPerDay = v;
+        const el = byId('set-new-cards-value');
+        if (el) el.textContent = v;
+      });
+      setNewCards.addEventListener('change', () => {
+        save();
+        renderStats();
+      });
+    }
+    const setHideLeech = byId('set-hide-leech');
+    if (setHideLeech) {
+      setHideLeech.addEventListener('change', (e) => {
+        state.settings.hideLeeches = e.target.checked;
+        save();
+        renderStats();
+      });
+    }
+    const setReminders = byId('set-reminders');
+    if (setReminders) {
+      setReminders.addEventListener('change', async (e) => {
+        if (e.target.checked) {
+          const ok = await enableReminders();
+          if (!ok) {
+            e.target.checked = false;
+            state.settings.reminders = false;
+            save();
+            return;
+          }
+        }
+        state.settings.reminders = e.target.checked;
+        save();
+        if (e.target.checked) toast(t('toast_reminders_on'), 'success');
+        scheduleReminderCheck();
+      });
+    }
+    const setRemHour = byId('set-reminder-hour');
+    if (setRemHour) {
+      setRemHour.addEventListener('input', (e) => {
+        const v = Number(e.target.value);
+        state.settings.reminderHour = v;
+        const el = byId('set-reminder-hour-value');
+        if (el) el.textContent = String(v).padStart(2, '0') + ':00';
+      });
+      setRemHour.addEventListener('change', () => {
+        save();
+        scheduleReminderCheck();
+      });
+    }
     byId('import-file').addEventListener('change', (e) => {
       const file = e.target.files && e.target.files[0];
       if (file) importProgressFile(file);
@@ -3741,13 +4927,19 @@
   }
 
   async function init() {
-    if (!DATA || !Array.isArray(DATA.units)) {
-      byId('main').textContent = 'Không tải được data.js. Hãy kiểm tra file data.js nằm cùng thư mục với index.html.';
-      return;
-    }
-    indexData();
     try { state = await loadStateAsync(); }
     catch (e) { console.warn('[init]', e); state = defaultState(); }
+    try {
+      const want = activeBookId();
+      await loadBookData(want);
+      useBookData(want);
+    } catch (e) {
+      console.warn('[init] book data', e);
+      byId('main').textContent = 'Không tải được dữ liệu sách. Hãy kiểm tra các file data-book*.js nằm cùng thư mục với index.html.';
+      return;
+    }
+    booted = true;
+    updateBookUI();
     state.user.totalWordsMastered = countMastered();
     save();
     applyTheme();
@@ -3760,6 +4952,23 @@
     showScreen('dashboard');
     requestPersistentStorage();
     initInstallPrompt();
+    scheduleReminderCheck();
+    try {
+      const ls = Number(localStorage.getItem('eew-cloud-last-sync') || 0);
+      if (ls > 0) cloud.lastSyncedAt = ls;
+    } catch (e) {}
+    // Nạp sẵn các sách còn lại khi rảnh để đổi sách là tức thì (và để service worker cache offline)
+    setTimeout(() => BOOKS.forEach((b) => loadBookData(b.id).catch(() => {})), 1500);
+    // Sau khi nạp sách, có thể chạy diagnostics im lặng trên console khi dev
+    setTimeout(() => {
+      try {
+        BOOKS.forEach((b) => {
+          const d = window.VOCAB_BOOKS && window.VOCAB_BOOKS[b.id];
+          if (!d) console.warn('[audit] missing', b.id);
+          else if ((d.units || []).length !== 30) console.warn('[audit] unit count', b.id, d.units.length);
+        });
+      } catch (e) {}
+    }, 4000);
     initCloud().then(updateCloudUI).catch(() => updateCloudUI());
     if (shouldShowOnboarding()) {
       // Slight delay so dashboard paints first

@@ -1,7 +1,7 @@
 {
-  "name": "4000 Essential English Word II",
-  "short_name": "Word II",
-  "description": "Học 4000 Essential English Words Book 2 với flashcard, quiz, story và FSRS. Chạy offline.",
+  "name": "4000 Essential English Words",
+  "short_name": "4000 Words",
+  "description": "Học 4000 Essential English Words (Book 1, 2, 3, ...) với flashcard, quiz, story và FSRS. Chạy offline.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -9,11 +9,44 @@
   "background_color": "#eef0ff",
   "theme_color": "#4f52d6",
   "lang": "vi",
-  "categories": ["education", "productivity"],
+  "categories": [
+    "education",
+    "productivity"
+  ],
   "icons": [
+    {
+      "src": "icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "icon-192.png",
       "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-384.png",
+      "sizes": "384x384",
       "type": "image/png",
       "purpose": "any"
     },
@@ -29,5 +62,6 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "id": "./eew"
 }

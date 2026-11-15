@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>4000 Essential English Word II</title>
-  <meta name="description" content="4000 Essential English Word II — học từ vựng với flashcard, quiz, story và FSRS. Chạy offline.">
+  <title>4000 Essential English Words</title>
+  <meta name="description" content="4000 Essential English Words — học từ vựng với flashcard, quiz, story và FSRS. Chạy offline.">
   <meta name="theme-color" content="#eef0ff">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Word II">
+  <meta name="apple-mobile-web-app-title" content="4000 Words">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
@@ -86,11 +86,11 @@
          HEADER (luôn hiển thị)
          ==================================================================== -->
     <header class="app-header glass" id="app-header">
-      <button class="brand" type="button" data-nav="dashboard" aria-label="Về trang chủ — 4000 Essential English Word II">
-        <span class="brand__mark" aria-hidden="true">IV</span>
+      <button class="brand" type="button" data-nav="dashboard" aria-label="Về trang chủ — 4000 Essential English Words">
+        <span class="brand__mark" aria-hidden="true">EW</span>
         <span class="brand__text">
-          <strong>4000 Essential English Word II</strong>
-          <small data-i18n="brand_sub">Book 2 · Flashcard · FSRS</small>
+          <strong>4000 Essential English Words</strong>
+          <small id="brand-sub">Book 2 · Flashcard · FSRS</small>
         </span>
       </button>
 
@@ -135,7 +135,7 @@
         <!-- PWA install banner (ẩn khi đã cài / đã bỏ qua) -->
         <div class="install-banner glass" id="install-banner" hidden role="region" aria-label="Cài đặt ứng dụng">
           <div class="install-banner__text">
-            <strong data-i18n="install_title">Cài Word II vào máy</strong>
+            <strong data-i18n="install_title">Cài 4000 Words vào máy</strong>
             <span class="muted small" id="install-banner-sub" data-i18n="install_sub">Học offline, mở nhanh từ màn hình chính</span>
           </div>
           <div class="install-banner__actions">
@@ -143,6 +143,8 @@
             <button class="btn btn--ghost btn--sm" type="button" data-action="install-dismiss" data-i18n="install_later">Để sau</button>
           </div>
         </div>
+
+        <div class="book-switch" id="book-switch" role="group" aria-label="Chọn sách"></div>
 
         <div class="hero glass">
           <div class="hero__intro">
@@ -200,6 +202,48 @@
               <span data-i18n="stat_due">từ cần ôn hôm nay</span>
             </div>
           </article>
+        </div>
+
+        <!-- Tiến độ phân loại + dự báo ôn tập (Giai đoạn 1) -->
+        <div class="progress-panel glass" id="progress-panel">
+          <div class="progress-panel__head">
+            <h2 data-i18n="progress_heading">Tiến độ học</h2>
+            <p class="muted small" id="forecast-text">Đang tính dự báo…</p>
+          </div>
+          <div class="progress-bars" id="progress-bars" aria-label="Phân bố trạng thái từ">
+            <div class="pbar" data-state="new">
+              <span class="pbar__label" data-i18n="state_new">Mới</span>
+              <div class="pbar__track"><div class="pbar__fill" id="pbar-new" style="width:0%"></div></div>
+              <strong class="pbar__n" id="pbar-new-n">0</strong>
+            </div>
+            <div class="pbar" data-state="learning">
+              <span class="pbar__label" data-i18n="state_learning">Đang học</span>
+              <div class="pbar__track"><div class="pbar__fill" id="pbar-learning" style="width:0%"></div></div>
+              <strong class="pbar__n" id="pbar-learning-n">0</strong>
+            </div>
+            <div class="pbar" data-state="review">
+              <span class="pbar__label" data-i18n="state_review">Ôn tập</span>
+              <div class="pbar__track"><div class="pbar__fill" id="pbar-review" style="width:0%"></div></div>
+              <strong class="pbar__n" id="pbar-review-n">0</strong>
+            </div>
+            <div class="pbar" data-state="mastered">
+              <span class="pbar__label" data-i18n="state_mastered">Đã thuộc</span>
+              <div class="pbar__track"><div class="pbar__fill" id="pbar-mastered" style="width:0%"></div></div>
+              <strong class="pbar__n" id="pbar-mastered-n">0</strong>
+            </div>
+            <div class="pbar" data-state="leech" id="pbar-leech-row" hidden>
+              <span class="pbar__label" data-i18n="state_leech">Từ yếu</span>
+              <div class="pbar__track"><div class="pbar__fill" id="pbar-leech" style="width:0%"></div></div>
+              <strong class="pbar__n" id="pbar-leech-n">0</strong>
+            </div>
+          </div>
+          <div class="progress-panel__foot">
+            <p class="muted small" id="new-cards-today-text"></p>
+            <button class="btn btn--soft btn--sm" type="button" id="btn-dash-weak" data-action="review-weak" hidden>
+              <span data-i18n="review_weak_btn">Ôn từ yếu</span>
+              <span class="count-pill" id="dash-weak-count">0</span>
+            </button>
+          </div>
         </div>
 
         <div class="section-head">
@@ -523,7 +567,7 @@
            ================================================================== -->
       <section class="screen" id="screen-review" data-screen="review" aria-labelledby="review-title">
         <div class="topbar">
-          <button class="icon-btn" type="button" data-nav="dashboard" aria-label="Về trang chủ — 4000 Essential English Word II">
+          <button class="icon-btn" type="button" data-nav="dashboard" aria-label="Về trang chủ — 4000 Essential English Words">
             <svg class="icon" aria-hidden="true"><use href="#i-back"/></svg>
           </button>
           <div class="topbar__title">
@@ -557,18 +601,31 @@
           </div>
         </div>
 
-        <!-- Hiện khi không có từ nào đến hạn -->
+        <!-- Hiện khi không có từ nào đến hạn và không có từ yếu -->
         <div class="glass panel empty-state" id="review-empty" hidden>
           <svg class="icon empty-state__icon" aria-hidden="true"><use href="#i-check"/></svg>
-          <h3>Hôm nay không còn từ nào cần ôn</h3>
-          <p class="muted">Hãy học thêm từ mới ở một Unit, các từ sẽ xuất hiện ở đây khi đến hạn.</p>
+          <h3 data-i18n="review_empty_title">Hôm nay không còn từ nào cần ôn</h3>
+          <p class="muted" data-i18n="review_empty_body">Hãy học thêm từ mới ở một Unit, các từ sẽ xuất hiện ở đây khi đến hạn.</p>
           <button class="btn btn--primary" type="button" data-nav="dashboard" data-i18n="pick_unit">Chọn Unit để học</button>
         </div>
 
         <div class="section-head">
-          <h2>Từ đến hạn</h2>
+          <h2 data-i18n="due_words_heading">Từ đến hạn</h2>
         </div>
         <ul class="word-list glass" id="review-due-list"></ul>
+
+        <!-- Từ yếu / leech (Giai đoạn 2) -->
+        <div id="review-weak-block" hidden>
+          <div class="section-head" style="margin-top:18px">
+            <h2 data-i18n="weak_heading">Từ yếu</h2>
+            <button class="btn btn--soft btn--sm" type="button" data-action="review-weak" id="btn-review-weak">
+              <span data-i18n="review_weak_btn">Ôn từ yếu</span>
+              <span class="count-pill" id="review-weak-count">0</span>
+            </button>
+          </div>
+          <p class="muted small" data-i18n="weak_hint">Những từ bạn quên nhiều hoặc sắp quên — nên ôn riêng.</p>
+          <ul class="word-list glass" id="review-weak-list"></ul>
+        </div>
       </section>
 
       <!-- ==================================================================
@@ -652,6 +709,38 @@
           <select class="select" id="set-voice"><option value="">Tự động (tiếng Anh)</option></select>
         </label>
 
+        <label class="setting setting--stack">
+          <span class="setting__text"><strong data-i18n="set_new_cards">Từ mới mỗi ngày</strong><small data-i18n="set_new_cards_sub">Giới hạn số từ mới học trong ngày (5–50)</small></span>
+          <input class="range" type="range" id="set-new-cards" min="5" max="50" step="5" value="20">
+          <span class="muted small"><b id="set-new-cards-value">20</b></span>
+        </label>
+
+        <label class="setting setting--stack">
+          <span class="setting__text"><strong data-i18n="set_retention">Mức nhớ mục tiêu</strong><small data-i18n="set_retention_sub">Cao hơn = ôn dày hơn, nhớ chắc hơn. Mặc định 90%</small></span>
+          <select class="select" id="set-retention">
+            <option value="0.85">85%</option>
+            <option value="0.9">90%</option>
+            <option value="0.93">93%</option>
+            <option value="0.95">95%</option>
+          </select>
+        </label>
+
+        <label class="setting">
+          <span class="setting__text"><strong data-i18n="set_hide_leech">Ẩn từ yếu (leech)</strong><small data-i18n="set_hide_leech_sub">Không đưa từ quên quá nhiều vào Review Today</small></span>
+          <input class="switch" type="checkbox" id="set-hide-leech" role="switch">
+        </label>
+
+        <label class="setting">
+          <span class="setting__text"><strong data-i18n="set_reminders">Nhắc học mỗi ngày</strong><small data-i18n="set_reminders_sub">Thông báo khi có từ đến hạn (cần cấp quyền)</small></span>
+          <input class="switch" type="checkbox" id="set-reminders" role="switch">
+        </label>
+
+        <label class="setting setting--stack" id="reminder-hour-row">
+          <span class="setting__text"><strong data-i18n="set_reminder_hour">Giờ nhắc</strong><small data-i18n="set_reminder_hour_sub">Khung giờ gợi ý ôn tập trong ngày</small></span>
+          <input class="range" type="range" id="set-reminder-hour" min="6" max="22" step="1" value="20">
+          <span class="muted small"><b id="set-reminder-hour-value">20:00</b></span>
+        </label>
+
         <div class="setting setting--stack">
           <span class="setting__text"><strong data-i18n="set_accounts">Tài khoản học</strong><small data-i18n="set_accounts_sub">Nhiều hồ sơ trên máy này, không cần mật khẩu</small></span>
           <button class="btn btn--soft" type="button" data-action="open-profiles">
@@ -663,11 +752,11 @@
         <div class="setting setting--stack" id="cloud-sync-block">
           <span class="setting__text">
             <strong data-i18n="set_cloud">Đồng bộ đám mây</strong>
-            <small id="cloud-status" data-i18n="set_cloud_sub">Đồng bộ tiến độ giữa các thiết bị qua Firebase</small>
+            <small id="cloud-status" data-i18n="set_cloud_sub">Dùng nhiều thiết bị: đăng nhập Google. Ẩn danh chỉ sao lưu cho trình duyệt này.</small>
           </span>
           <div class="btn-row" id="cloud-actions">
             <button class="btn btn--primary" type="button" id="btn-cloud-anon" data-action="cloud-sign-in-anon">
-              <span data-i18n="cloud_anon">Bật đồng bộ (ẩn danh)</span>
+              <span data-i18n="cloud_anon">Sao lưu ẩn danh (chỉ trình duyệt này)</span>
             </button>
             <button class="btn btn--soft" type="button" id="btn-cloud-google" data-action="cloud-sign-in-google">
               <span data-i18n="cloud_google">Đăng nhập Google</span>
@@ -691,7 +780,7 @@
         </div>
 
         <div class="setting setting--stack" id="install-setting" hidden>
-          <span class="setting__text"><strong data-i18n="set_install">Cài đặt ứng dụng</strong><small data-i18n="set_install_sub">Thêm Word II vào màn hình chính để học offline</small></span>
+          <span class="setting__text"><strong data-i18n="set_install">Cài đặt ứng dụng</strong><small data-i18n="set_install_sub">Thêm 4000 Words vào màn hình chính để học offline</small></span>
           <button class="btn btn--soft" type="button" data-action="install-app" data-i18n="install_btn">Cài app</button>
         </div>
 
@@ -704,8 +793,24 @@
             <button class="btn btn--soft" type="button" id="btn-import" data-action="import-progress">
               <svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg><span data-i18n="import_progress">Nhập tiến độ</span>
             </button>
+            <button class="btn btn--soft" type="button" data-action="export-all-profiles">
+              <span data-i18n="export_all_profiles">Xuất tất cả hồ sơ</span>
+            </button>
             <input type="file" id="import-file" accept="application/json,.json" hidden>
           </div>
+        </div>
+
+        <div class="setting setting--stack">
+          <span class="setting__text"><strong data-i18n="set_diagnostics">Kiểm thử app</strong><small data-i18n="set_diagnostics_sub">Kiểm tra 6 sách, FSRS, hồ sơ, cloud</small></span>
+          <button class="btn btn--soft" type="button" data-action="run-diagnostics" data-i18n="run_diagnostics">Chạy kiểm thử</button>
+          <pre class="diagnostics-out muted small" id="diagnostics-out" hidden></pre>
+        </div>
+
+        <div class="setting setting--stack">
+          <span class="setting__text">
+            <strong data-i18n="set_about">Về ứng dụng</strong>
+            <small id="about-version">4000 Essential English Words · v3.0.0 · 6 books · FSRS</small>
+          </span>
         </div>
 
         <div class="setting setting--stack setting--danger">
@@ -791,8 +896,8 @@
 
       <div class="onboard__step is-active" data-step="0">
         <div class="onboard__icon" aria-hidden="true">📚</div>
-        <h2 id="onboard-title" data-i18n="ob_welcome_title">Chào mừng đến Word II</h2>
-        <p class="muted" data-i18n="ob_welcome_body">600 từ thiết yếu (Book 2) với flashcard, quiz, truyện ngắn và thuật toán FSRS giúp bạn nhớ lâu hơn.</p>
+        <h2 id="onboard-title" data-i18n="ob_welcome_title">Chào mừng đến 4000 Essential English Words</h2>
+        <p class="muted" data-i18n="ob_welcome_body">Từ vựng thiết yếu theo từng Book với flashcard, quiz, truyện ngắn và thuật toán FSRS giúp bạn nhớ lâu hơn.</p>
       </div>
 
       <div class="onboard__step" data-step="1" hidden>
@@ -821,7 +926,7 @@
       <div class="onboard__step" data-step="3" hidden>
         <div class="onboard__icon" aria-hidden="true">🚀</div>
         <h2 data-i18n="ob_ready_title">Sẵn sàng bắt đầu?</h2>
-        <p class="muted" data-i18n="ob_ready_body">Bắt đầu với Unit 1 — The Twelve Months. Bạn có thể đổi hồ sơ và bật đồng bộ đám mây trong Cài đặt bất cứ lúc nào.</p>
+        <p class="muted" data-i18n="ob_ready_body">Bắt đầu với Unit 1. Bạn có thể đổi sách ở trang chủ, đổi hồ sơ và bật đồng bộ đám mây trong Cài đặt bất cứ lúc nào.</p>
       </div>
 
       <div class="onboard__actions">
@@ -897,10 +1002,9 @@
     <p class="noscript">Ứng dụng cần JavaScript để hoạt động. Hãy bật JavaScript trong trình duyệt.</p>
   </noscript>
 
-  <!-- Thứ tự quan trọng: data.js (dữ liệu) trước, app.js (logic) sau.
+  <!-- Thứ tự quan trọng: firebase-config.js trước app.js; dữ liệu sách (data-book*.js) được app.js nạp theo nhu cầu.
        Dùng thẻ script thường (không dùng ES module) để mở trực tiếp bằng file:// không bị lỗi CORS. -->
   <script src="firebase-config.js"></script>
-  <script src="data.js"></script>
   <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
