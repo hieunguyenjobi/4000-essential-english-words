@@ -1,0 +1,10 @@
+{
+  "name": "4000-essentials-english-words",
+  "version": "3.5.1",
+  "private": true,
+  "description": "App học từ vựng tiếng Anh (static PWA). Không cần cài thư viện; chỉ cần Node.js để chạy kiểm thử.",
+  "scripts": {
+    "test": "node tests/run.js",
+    "validate-data": "node tools/validate-data.js --strict"
+  }
+}

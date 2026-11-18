@@ -2118,3 +2118,40 @@ kbd {
 
 /* Nhãn khoảng ôn kế tiếp trên nút đánh giá flashcard */
 .rate-next{display:block;margin-top:2px;font-size:.72rem;font-weight:700;opacity:.85;letter-spacing:.01em}
+
+/* Viết câu: kiểm tra nhanh + nhận xét AI */
+.write-checks { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 4px; font-size: 0.9rem; }
+.write-checks .is-ok { color: var(--good); }
+.write-checks .is-warn { color: var(--bad); }
+.write-ai-row { margin: 8px 0; }
+.write-ai { margin: 8px 0; padding: 10px 12px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--text-faint) 45%, transparent); }
+.write-ai p { margin: 6px 0 0; }
+.btn.is-suggested { outline: 2px solid currentColor; outline-offset: 2px; }
+
+/* Nút "Học hôm nay" + màn Từ vựng */
+.hero__actions--today { margin-bottom: 10px; }
+.btn--today { width: min(100%, 440px); justify-content: flex-start; text-align: left; gap: 12px; }
+.btn--today[disabled] { opacity: 0.75; }
+.btn-today__text { display: grid; gap: 2px; }
+.btn-today__text small { font-weight: 500; opacity: 0.92; }
+.hero__actions--secondary .btn { flex: 1 1 auto; }
+.words-tools { display: grid; gap: 10px; }
+.words-tools .input { width: 100%; }
+.word-row__meta { display: block; margin-top: 4px; font-size: 0.8rem; color: var(--text-faint); }
+.word-row__known { margin-top: 6px; }
+.words-more { display: flex; justify-content: center; margin: 12px 0; }
+.words-empty { text-align: center; padding: 16px; }
+
+/* Tỷ lệ nhớ thực tế */
+.retention { margin-top: 14px; display: grid; gap: 6px; }
+.retention__head { display: grid; gap: 2px; }
+.retention__chart { width: 100%; max-width: 420px; height: auto; }
+.ret-bar--ok { fill: var(--good); }
+.ret-bar--low { fill: var(--bad); }
+.ret-bar--empty { fill: var(--text-faint); opacity: 0.35; }
+.ret-target { stroke: var(--text-faint); stroke-width: 1; stroke-dasharray: 4 3; }
+.ret-label { fill: var(--text-soft); font-size: 9px; font-weight: 700; }
+.ret-axis { fill: var(--text-faint); font-size: 9px; }
+
+/* Tham số FSRS tùy chỉnh */
+textarea.fsrs-w { min-height: 4.5em; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem; }

@@ -86,7 +86,7 @@
          HEADER (luôn hiển thị)
          ==================================================================== -->
     <header class="app-header glass" id="app-header">
-      <button class="brand" type="button" data-nav="dashboard" aria-label="Về trang chủ — 4000 Essential English Words">
+      <button class="brand" type="button" data-nav="dashboard" aria-label="Về trang chủ — 4000 Essential English Words" data-i18n-aria="brand_aria">
         <span class="brand__mark" aria-hidden="true">EW</span>
         <span class="brand__text">
           <strong>4000 Essential English Words</strong>
@@ -94,18 +94,18 @@
         </span>
       </button>
 
-      <div class="header-stats" aria-label="Thống kê nhanh">
-        <button class="chip chip--profile" type="button" data-action="open-profiles" title="Tài khoản học đang dùng" id="hdr-profile-btn">
+      <div class="header-stats" aria-label="Thống kê nhanh" data-i18n-aria="hdr_stats_aria">
+        <button class="chip chip--profile" type="button" data-action="open-profiles" title="Tài khoản học đang dùng" data-i18n-title="hdr_profile_title" id="hdr-profile-btn">
           <b id="hdr-profile">Learner</b>
         </button>
-        <span class="chip chip--level" title="Cấp độ hiện tại">
+        <span class="chip chip--level" title="Cấp độ hiện tại" data-i18n-title="hdr_level_title">
           Lv <b id="hdr-level">1</b>
         </span>
-        <span class="chip chip--xp" title="Tổng XP">
+        <span class="chip chip--xp" title="Tổng XP" data-i18n-title="hdr_xp_title">
           <svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg>
           <b id="hdr-xp">0</b>
         </span>
-        <span class="chip chip--streak" title="Chuỗi ngày học liên tiếp">
+        <span class="chip chip--streak" title="Chuỗi ngày học liên tiếp" data-i18n-title="hdr_streak_title">
           <svg class="icon" aria-hidden="true"><use href="#i-flame"/></svg>
           <b id="hdr-streak">0</b>
         </span>
@@ -133,7 +133,7 @@
       <section class="screen is-active" id="screen-dashboard" data-screen="dashboard" aria-labelledby="dash-title">
 
         <!-- PWA install banner (ẩn khi đã cài / đã bỏ qua) -->
-        <div class="install-banner glass" id="install-banner" hidden role="region" aria-label="Cài đặt ứng dụng">
+        <div class="install-banner glass" id="install-banner" hidden role="region" aria-label="Cài đặt ứng dụng" data-i18n-aria="install_aria">
           <div class="install-banner__text">
             <strong data-i18n="install_title">Cài 4000 Words vào máy</strong>
             <span class="muted small" id="install-banner-sub" data-i18n="install_sub">Học offline, mở nhanh từ màn hình chính</span>
@@ -144,19 +144,28 @@
           </div>
         </div>
 
-        <div class="book-switch" id="book-switch" role="group" aria-label="Chọn sách"></div>
+        <div class="book-switch" id="book-switch" role="group" aria-label="Chọn sách" data-i18n-aria="book_switch_aria"></div>
 
         <div class="hero glass">
           <div class="hero__intro">
             <h1 id="dash-title" data-i18n="dash_title">Học từ vựng, nhớ lâu hơn mỗi ngày</h1>
             <p id="dash-greeting" class="muted">Mỗi ngày vài phút, đúng lúc cần ôn lại.</p>
-            <div class="hero__actions">
-              <button class="btn btn--primary btn--lg" type="button" id="btn-review-today" data-action="start-review">
+            <div class="hero__actions hero__actions--today">
+              <button class="btn btn--primary btn--lg btn--today" type="button" id="btn-today" data-action="start-today">
+                <svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg>
+                <span class="btn-today__text">
+                  <strong id="today-title">Học hôm nay</strong>
+                  <small id="today-sub"></small>
+                </span>
+              </button>
+            </div>
+            <div class="hero__actions hero__actions--secondary">
+              <button class="btn btn--soft btn--lg" type="button" id="btn-review-today" data-action="start-review">
                 <svg class="icon" aria-hidden="true"><use href="#i-review"/></svg>
                 <span data-i18n="review_today">Review Today</span>
                 <span class="count-pill" id="review-today-count">0</span>
               </button>
-              <button class="btn btn--soft btn--lg" type="button" id="btn-quick-study" data-action="start-quick">
+              <button class="btn btn--ghost btn--lg" type="button" id="btn-quick-study" data-action="start-quick">
                 <svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg>
                 <span data-i18n="quick_study">Học nhanh 5 phút</span>
               </button>
@@ -210,7 +219,7 @@
             <h2 data-i18n="progress_heading">Tiến độ học</h2>
             <p class="muted small" id="forecast-text">Đang tính dự báo…</p>
           </div>
-          <div class="progress-bars" id="progress-bars" aria-label="Phân bố trạng thái từ">
+          <div class="progress-bars" id="progress-bars" aria-label="Phân bố trạng thái từ" data-i18n-aria="word_state_aria">
             <div class="pbar" data-state="new">
               <span class="pbar__label" data-i18n="state_new">Mới</span>
               <div class="pbar__track"><div class="pbar__fill" id="pbar-new" style="width:0%"></div></div>
@@ -236,6 +245,14 @@
               <div class="pbar__track"><div class="pbar__fill" id="pbar-leech" style="width:0%"></div></div>
               <strong class="pbar__n" id="pbar-leech-n">0</strong>
             </div>
+          </div>
+          <div class="retention" id="retention-panel">
+            <div class="retention__head">
+              <strong data-i18n="ret_title">Tỷ lệ nhớ thực tế</strong>
+              <span class="muted small" id="retention-text"></span>
+            </div>
+            <svg class="retention__chart" id="retention-chart" viewBox="0 0 320 96" role="img" aria-label="Biểu đồ tỷ lệ nhớ đúng theo tuần trong 8 tuần gần nhất" data-i18n-aria="ret_aria"></svg>
+            <p class="muted small" id="retention-hint"></p>
           </div>
           <div class="progress-panel__foot">
             <p class="muted small" id="new-cards-today-text"></p>
@@ -266,7 +283,7 @@
            ================================================================== -->
       <section class="screen" id="screen-unit" data-screen="unit" aria-labelledby="unit-hub-title">
         <div class="topbar">
-          <button class="icon-btn" type="button" data-action="back" aria-label="Quay lại">
+          <button class="icon-btn" type="button" data-action="back" aria-label="Quay lại" data-i18n-aria="back_aria">
             <svg class="icon" aria-hidden="true"><use href="#i-back"/></svg>
           </button>
           <div class="topbar__title">
@@ -280,7 +297,7 @@
             <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="unit-hub-progress">
               <span class="progress__fill" id="unit-hub-progress-fill" style="width:0%"></span>
             </div>
-            <p class="muted"><b id="unit-hub-mastered">0</b> / <b id="unit-hub-total">20</b> từ đã thuộc · <b id="unit-hub-due">0</b> từ cần ôn</p>
+            <p class="muted"><b id="unit-hub-mastered">0</b> / <b id="unit-hub-total">20</b> <span data-i18n="hub_mastered_words">từ đã thuộc</span> · <b id="unit-hub-due">0</b> <span data-i18n="hub_due_words">từ cần ôn</span></p>
           </div>
         </div>
 
@@ -293,7 +310,7 @@
           <button class="mode-card glass" type="button" data-action="start-quiz">
             <svg class="icon mode-card__icon" aria-hidden="true"><use href="#i-quiz"/></svg>
             <strong data-i18n="hub_quiz">Quiz</strong>
-            <span>Tự thích ứng: từ càng vững, câu hỏi càng khó</span>
+            <span data-i18n="hub_quiz_sub">Tự thích ứng: từ càng vững, câu hỏi càng khó</span>
           </button>
           <button class="mode-card glass" type="button" data-action="open-story">
             <svg class="icon mode-card__icon" aria-hidden="true"><use href="#i-book"/></svg>
@@ -304,7 +321,7 @@
 
         <div class="section-head">
           <h2 data-i18n="hub_practice">Luyện tập theo kỹ năng</h2>
-          <p class="muted small">Mỗi lượt 10 từ, ưu tiên từ đến hạn và từ mới</p>
+          <p class="muted small" data-i18n="hub_practice_sub">Mỗi lượt 10 từ, ưu tiên từ đến hạn và từ mới</p>
         </div>
         <div class="practice-grid" id="practice-grid">
           <button class="practice-btn glass" type="button" data-action="start-practice" data-ptype="typing">
@@ -336,13 +353,13 @@
         <button class="test-card glass" type="button" id="unit-test-card" data-action="start-test" data-passed="false">
           <svg class="icon mode-card__icon" aria-hidden="true"><use href="#i-check"/></svg>
           <strong data-i18n="hub_test">Unit Test</strong>
-          <span>Mỗi từ một câu, trộn Nhớ, Hiểu và Vận dụng</span>
+          <span data-i18n="hub_test_sub">Mỗi từ một câu, trộn Nhớ, Hiểu và Vận dụng</span>
           <small id="unit-test-status" class="muted">Chưa làm</small>
         </button>
 
         <div class="section-head">
           <h2 data-i18n="word_list">Danh sách từ</h2>
-          <p class="muted small">Chấm màu theo độ vững (stability FSRS)</p>
+          <p class="muted small" data-i18n="word_list_sub">Chấm màu theo độ vững (stability FSRS)</p>
         </div>
         <ul class="word-list glass" id="unit-word-list"></ul>
       </section>
@@ -352,14 +369,14 @@
            ================================================================== -->
       <section class="screen" id="screen-flashcard" data-screen="flashcard" aria-labelledby="fc-title">
         <div class="topbar">
-          <button class="icon-btn" type="button" data-action="back" aria-label="Thoát flashcard">
+          <button class="icon-btn" type="button" data-action="back" aria-label="Thoát flashcard" data-i18n-aria="exit_flashcard_aria">
             <svg class="icon" aria-hidden="true"><use href="#i-back"/></svg>
           </button>
           <div class="topbar__title">
             <h2 id="fc-title" data-i18n="hub_flashcard">Flashcard</h2>
             <p class="muted"><span id="fc-counter">0 / 0</span></p>
           </div>
-          <span class="chip chip--timer" id="fc-timer" hidden title="Thời gian còn lại">5:00</span>
+          <span class="chip chip--timer" id="fc-timer" hidden title="Thời gian còn lại" data-i18n-title="fc_timer_title">5:00</span>
         </div>
 
         <div class="progress progress--thin" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="fc-progress">
@@ -368,7 +385,7 @@
 
         <!-- Cảnh 3D: click / Space để lật -->
         <div class="card-scene" id="fc-scene">
-          <div class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Thẻ từ vựng, nhấn để lật" aria-pressed="false">
+          <div class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Thẻ từ vựng, nhấn để lật" data-i18n-aria="fc_card_aria" aria-pressed="false">
 
             <!-- Mặt trước: từ + IPA + từ loại -->
             <div class="flashcard__face flashcard__face--front glass-strong">
@@ -380,9 +397,9 @@
               </div>
               <button class="btn btn--soft" type="button" id="fc-speak" data-action="speak-current">
                 <svg class="icon" aria-hidden="true"><use href="#i-speaker"/></svg>
-                <span>Nghe phát âm</span>
+                <span data-i18n="fc_speak">Nghe phát âm</span>
               </button>
-              <p class="flip-hint"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> Chạm để lật thẻ</p>
+              <p class="flip-hint"><svg class="icon" aria-hidden="true"><use href="#i-flip"/></svg> <span data-i18n="fc_flip_hint">Chạm để lật thẻ</span></p>
             </div>
 
             <!-- Mặt sau: Definition + Example (+ nghĩa tiếng Việt) -->
@@ -391,7 +408,7 @@
                 <p class="fc-label">Definition</p>
                 <p class="fc-definition" id="fc-definition">Definition</p>
                 <!-- Câu ví dụ của sách + 2 câu bổ sung; bấm vào từng câu để nghe -->
-                <p class="fc-label">Examples (bấm câu để nghe)</p>
+                <p class="fc-label" data-i18n="fc_examples">Examples (bấm câu để nghe)</p>
                 <div class="example-list" id="fc-more-list"></div>
                 <p class="fc-vi" id="fc-vi">Nghĩa tiếng Việt</p>
               </div>
@@ -419,7 +436,7 @@
             <small data-i18n="rate_easy_sub">+12 XP</small>
           </button>
         </div>
-        <p class="kbd-hint muted small">Phím tắt: <kbd>Space</kbd> lật · <kbd>1</kbd> Again · <kbd>2</kbd> Hard · <kbd>3</kbd> Good · <kbd>4</kbd> Easy · <kbd>S</kbd> nghe</p>
+        <p class="kbd-hint muted small"><span data-i18n="kbd_shortcuts">Phím tắt:</span> <kbd>Space</kbd> <span data-i18n="kbd_flip">lật</span> · <kbd>1</kbd> Again · <kbd>2</kbd> Hard · <kbd>3</kbd> Good · <kbd>4</kbd> Easy · <kbd>S</kbd> <span data-i18n="kbd_listen">nghe</span></p>
       </section>
 
       <!-- ==================================================================
@@ -427,14 +444,14 @@
            ================================================================== -->
       <section class="screen" id="screen-quiz" data-screen="quiz" aria-labelledby="quiz-title">
         <div class="topbar">
-          <button class="icon-btn" type="button" data-action="back" aria-label="Thoát quiz">
+          <button class="icon-btn" type="button" data-action="back" aria-label="Thoát quiz" data-i18n-aria="h_quiz_exit">
             <svg class="icon" aria-hidden="true"><use href="#i-back"/></svg>
           </button>
           <div class="topbar__title">
             <h2 id="quiz-title" data-i18n="hub_quiz">Quiz</h2>
             <p class="muted"><span id="quiz-counter">0 / 0</span></p>
           </div>
-          <span class="chip chip--xp quiz-xp" title="XP kiếm được trong lượt này">
+          <span class="chip chip--xp quiz-xp" title="XP kiếm được trong lượt này" data-i18n-title="h_quiz_xp">
             <svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg>
             +<b id="quiz-xp">0</b>
           </span>
@@ -453,30 +470,30 @@
           <p class="quiz-sentence" id="quiz-sentence" hidden></p>
           <button class="btn btn--soft quiz-listen" type="button" id="quiz-listen" data-action="quiz-listen" hidden>
             <svg class="icon" aria-hidden="true"><use href="#i-speaker"/></svg>
-            <span>Nghe lại</span>
+            <span data-i18n="h_listen_again">Nghe lại</span>
           </button>
 
-          <div class="options" id="quiz-options" role="group" aria-label="Các đáp án"></div>
+          <div class="options" id="quiz-options" role="group" aria-label="Các đáp án" data-i18n-aria="h_options"></div>
 
           <!-- Dạng tự gõ: t_vi, t_def, dictation, cloze_t -->
           <div class="quiz-typed" id="quiz-typed" hidden>
             <p class="quiz-hint" id="quiz-hint" aria-live="polite"></p>
             <div class="quiz-typed__row">
               <input class="quiz-input" id="quiz-input" type="text" autocomplete="off" autocapitalize="off"
-                     autocorrect="off" spellcheck="false" aria-label="Câu trả lời của bạn" placeholder="Gõ đáp án rồi nhấn Enter">
+                     autocorrect="off" spellcheck="false" aria-label="Câu trả lời của bạn" placeholder="Gõ đáp án rồi nhấn Enter" data-i18n-aria="h_your_answer" data-i18n-placeholder="h_type_ph">
               <button class="btn btn--primary" type="button" id="quiz-submit" data-action="quiz-submit" data-i18n="check">Kiểm tra</button>
             </div>
             <div class="btn-row">
               <button class="btn btn--soft btn--sm" type="button" id="quiz-hint-btn" data-action="quiz-hint" data-i18n="hint_more">Gợi ý thêm</button>
               <button class="btn btn--ghost btn--sm" type="button" id="quiz-skip" data-action="quiz-skip" data-i18n="i_forgot">Tôi không nhớ</button>
             </div>
-            <p class="muted small">Dùng gợi ý thêm thì XP giảm một nửa và từ chưa được tính là đã tự nhớ.</p>
+            <p class="muted small" data-i18n="h_hint_note">Dùng gợi ý thêm thì XP giảm một nửa và từ chưa được tính là đã tự nhớ.</p>
           </div>
 
           <!-- Dạng sắp xếp câu: unscramble -->
           <div class="quiz-order" id="quiz-order" hidden>
-            <div class="order-answer" id="order-answer" aria-label="Câu của bạn" aria-live="polite"></div>
-            <div class="order-bank" id="order-bank" role="group" aria-label="Các từ cần xếp"></div>
+            <div class="order-answer" id="order-answer" aria-label="Câu của bạn" data-i18n-aria="h_order_yours" aria-live="polite"></div>
+            <div class="order-bank" id="order-bank" role="group" aria-label="Các từ cần xếp" data-i18n-aria="h_order_bank"></div>
             <p class="quiz-hint" id="order-msg" role="alert"></p>
             <div class="btn-row">
               <button class="btn btn--primary" type="button" id="order-submit" data-action="order-submit" data-i18n="check">Kiểm tra</button>
@@ -487,15 +504,21 @@
           <!-- Dạng viết câu: write (tự chấm) -->
           <div class="quiz-write" id="quiz-write" hidden>
             <textarea class="quiz-input quiz-textarea" id="write-input" rows="3" spellcheck="true"
-                      aria-label="Câu tiếng Anh của bạn" placeholder="Viết một câu có dùng từ này"></textarea>
+                      aria-label="Câu tiếng Anh của bạn" placeholder="Viết một câu có dùng từ này" data-i18n-aria="h_write_aria" data-i18n-placeholder="h_write_ph"></textarea>
             <p class="quiz-hint" id="write-msg" role="alert"></p>
             <button class="btn btn--primary" type="button" id="write-submit" data-action="write-submit" data-i18n="submit_sentence">Nộp câu</button>
             <div class="write-self" id="write-self" hidden>
-              <p class="muted">Câu mẫu để so sánh:</p>
+              <ul class="write-checks" id="write-checks"></ul>
+              <div class="write-ai-row" id="write-ai-row" hidden>
+                <button class="btn btn--ghost" type="button" id="write-ai" data-action="write-ai" data-i18n="ai_btn">Nhận xét bằng AI</button>
+              </div>
+              <div class="write-ai" id="write-ai-box" hidden aria-live="polite"></div>
+              <p class="muted" data-i18n="h_models">Câu mẫu để so sánh:</p>
               <ul class="write-models" id="write-models"></ul>
-              <p><b>Câu của bạn đã dùng từ đúng nghĩa và đúng ngữ pháp chưa?</b></p>
+              <p><b data-i18n="h_self_q">Câu của bạn đã dùng từ đúng nghĩa và đúng ngữ pháp chưa?</b></p>
               <div class="btn-row">
                 <button class="btn btn--good" type="button" id="write-ok" data-action="write-ok" data-i18n="i_used_right">Tôi dùng đúng</button>
+                <button class="btn btn--hard" type="button" id="write-partial" data-action="write-partial" data-i18n="write_partial">Chưa chắc</button>
                 <button class="btn btn--again" type="button" id="write-bad" data-action="write-bad" data-i18n="need_fix">Cần sửa lại</button>
               </div>
             </div>
@@ -519,7 +542,7 @@
            ================================================================== -->
       <section class="screen" id="screen-story" data-screen="story" aria-labelledby="story-title">
         <div class="topbar">
-          <button class="icon-btn" type="button" data-action="back" aria-label="Thoát story">
+          <button class="icon-btn" type="button" data-action="back" aria-label="Thoát story" data-i18n-aria="h_story_exit">
             <svg class="icon" aria-hidden="true"><use href="#i-back"/></svg>
           </button>
           <div class="topbar__title">
@@ -528,7 +551,7 @@
           </div>
           <button class="btn btn--soft btn--sm" type="button" id="story-read-all" data-action="story-read-all">
             <svg class="icon" aria-hidden="true"><use href="#i-speaker"/></svg>
-            <span>Nghe cả truyện</span>
+            <span data-i18n="story_listen_all">Nghe cả truyện</span>
           </button>
         </div>
 
@@ -539,19 +562,19 @@
         </article>
 
         <div class="glass panel story-words">
-          <h3>Từ mục tiêu trong bài</h3>
+          <h3 data-i18n="h_story_words">Từ mục tiêu trong bài</h3>
           <div class="chip-cloud" id="story-wordlist"></div>
         </div>
 
         <!-- Popup từ vựng: hover (desktop) hoặc click (mobile) -->
         <div class="word-popup glass-strong" id="word-popup" role="dialog" aria-labelledby="wp-word" hidden>
-          <button class="icon-btn icon-btn--sm word-popup__close" type="button" data-action="close-popup" aria-label="Đóng">
+          <button class="icon-btn icon-btn--sm word-popup__close" type="button" data-action="close-popup" aria-label="Đóng" data-i18n-aria="h_popup_close">
             <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
           </button>
           <div class="word-popup__head">
             <h4 id="wp-word">word</h4>
             <span class="pos-tag" id="wp-pos">n.</span>
-            <button class="icon-btn icon-btn--sm" type="button" id="wp-speak" data-action="popup-speak" aria-label="Nghe phát âm">
+            <button class="icon-btn icon-btn--sm" type="button" id="wp-speak" data-action="popup-speak" aria-label="Nghe phát âm" data-i18n-aria="h_popup_speak">
               <svg class="icon" aria-hidden="true"><use href="#i-speaker"/></svg>
             </button>
           </div>
@@ -567,27 +590,27 @@
            ================================================================== -->
       <section class="screen" id="screen-review" data-screen="review" aria-labelledby="review-title">
         <div class="topbar">
-          <button class="icon-btn" type="button" data-nav="dashboard" aria-label="Về trang chủ — 4000 Essential English Words">
+          <button class="icon-btn" type="button" data-nav="dashboard" aria-label="Về trang chủ — 4000 Essential English Words" data-i18n-aria="brand_aria">
             <svg class="icon" aria-hidden="true"><use href="#i-back"/></svg>
           </button>
           <div class="topbar__title">
             <h2 id="review-title" data-i18n="review_today">Review Today</h2>
-            <p class="muted">Ôn các từ đã đến hạn</p>
+            <p class="muted" data-i18n="review_sub">Ôn các từ đã đến hạn</p>
           </div>
         </div>
 
         <div class="glass panel review-summary" id="review-summary">
           <div class="review-count">
             <strong id="review-due-total">0</strong>
-            <span>từ đến hạn ôn</span>
+            <span data-i18n="review_due_words">từ đến hạn ôn</span>
           </div>
           <!-- 5 cột tương ứng 5 hộp Leitner; app.js đặt chiều cao qua style="--h: %" -->
-          <div class="box-bars" id="review-boxes" aria-label="Số từ đến hạn theo độ vững">
-            <div class="box-bar" data-box="1"><span class="box-bar__fill" style="--h:0%"></span><b>0</b><small>&lt;2 ngày</small></div>
-            <div class="box-bar" data-box="2"><span class="box-bar__fill" style="--h:0%"></span><b>0</b><small>&lt;7 ngày</small></div>
-            <div class="box-bar" data-box="3"><span class="box-bar__fill" style="--h:0%"></span><b>0</b><small>&lt;21 ngày</small></div>
-            <div class="box-bar" data-box="4"><span class="box-bar__fill" style="--h:0%"></span><b>0</b><small>&lt;60 ngày</small></div>
-            <div class="box-bar" data-box="5"><span class="box-bar__fill" style="--h:0%"></span><b>0</b><small>≥60 ngày</small></div>
+          <div class="box-bars" id="review-boxes" aria-label="Số từ đến hạn theo độ vững" data-i18n-aria="review_boxes_aria">
+            <div class="box-bar" data-box="1"><span class="box-bar__fill" style="--h:0%"></span><b>0</b><small data-i18n="box_1">&lt;2 ngày</small></div>
+            <div class="box-bar" data-box="2"><span class="box-bar__fill" style="--h:0%"></span><b>0</b><small data-i18n="box_2">&lt;7 ngày</small></div>
+            <div class="box-bar" data-box="3"><span class="box-bar__fill" style="--h:0%"></span><b>0</b><small data-i18n="box_3">&lt;21 ngày</small></div>
+            <div class="box-bar" data-box="4"><span class="box-bar__fill" style="--h:0%"></span><b>0</b><small data-i18n="box_4">&lt;60 ngày</small></div>
+            <div class="box-bar" data-box="5"><span class="box-bar__fill" style="--h:0%"></span><b>0</b><small data-i18n="box_5">≥60 ngày</small></div>
           </div>
           <div class="review-actions">
             <button class="btn btn--primary btn--lg" type="button" id="review-start-flashcard" data-action="review-flashcard">
@@ -640,8 +663,8 @@
           <p class="muted" id="result-subtitle">Bạn đã hoàn thành lượt học này.</p>
 
           <div class="results__stats">
-            <div><strong id="result-score">0 / 0</strong><span>đúng</span></div>
-            <div><strong id="result-accuracy">0%</strong><span>chính xác</span></div>
+            <div><strong id="result-score">0 / 0</strong><span data-i18n="h_res_correct">đúng</span></div>
+            <div><strong id="result-accuracy">0%</strong><span data-i18n="h_res_accuracy">chính xác</span></div>
             <div><strong id="result-xp">+0</strong><span>XP</span></div>
           </div>
 
@@ -651,6 +674,41 @@
             <button class="btn btn--primary btn--lg" type="button" id="result-retry" data-action="result-retry" data-i18n="keep_learning">Học tiếp</button>
             <button class="btn btn--ghost btn--lg" type="button" data-nav="dashboard" data-i18n="back_home">Về trang chủ</button>
           </div>
+        </div>
+      </section>
+      <!-- =================================================================
+           TỪ VỰNG: tìm, lọc, đánh dấu "đã biết"
+           ================================================================== -->
+      <section class="screen" id="screen-words" data-screen="words" aria-labelledby="words-title">
+        <div class="topbar">
+          <button class="icon-btn" type="button" data-nav="dashboard" aria-label="Quay lại" data-i18n-aria="back_aria">
+            <svg class="icon" aria-hidden="true"><use href="#i-back"/></svg>
+          </button>
+          <div class="topbar__title">
+            <h2 id="words-title" data-i18n="words_title">Từ vựng</h2>
+            <p class="muted" id="words-sub"></p>
+          </div>
+        </div>
+
+        <div class="glass panel words-tools">
+          <input class="input" type="search" id="words-search" autocomplete="off" spellcheck="false"
+                 placeholder="Tìm từ hoặc nghĩa…" aria-label="Tìm từ vựng"
+                 data-i18n-placeholder="words_search_ph" data-i18n-aria="words_search_aria">
+          <div class="filters" id="words-filters" role="group" aria-label="Lọc từ vựng" data-i18n-aria="words_filters_aria">
+            <button type="button" class="filter is-active" data-wfilter="all" data-i18n="wf_all">Tất cả</button>
+            <button type="button" class="filter" data-wfilter="new" data-i18n="state_new">Mới</button>
+            <button type="button" class="filter" data-wfilter="learning" data-i18n="state_learning">Đang học</button>
+            <button type="button" class="filter" data-wfilter="review" data-i18n="state_review">Ôn tập</button>
+            <button type="button" class="filter" data-wfilter="mastered" data-i18n="state_mastered">Đã thuộc</button>
+            <button type="button" class="filter" data-wfilter="weak" data-i18n="wf_weak">Từ yếu</button>
+            <button type="button" class="filter" data-wfilter="known" data-i18n="wf_known">Đã biết</button>
+          </div>
+        </div>
+
+        <ul class="word-list glass" id="words-list"></ul>
+        <p class="muted words-empty" id="words-empty" hidden data-i18n="words_empty">Không có từ nào khớp.</p>
+        <div class="words-more">
+          <button class="btn btn--ghost" type="button" id="words-more" data-action="words-more" hidden data-i18n="words_more">Hiện thêm</button>
         </div>
       </section>
     </main>
@@ -667,6 +725,10 @@
         <svg class="icon" aria-hidden="true"><use href="#i-review"/></svg>
         <span data-i18n="nav_review">Ôn tập</span>
         <em class="nav-badge" id="nav-due-badge" hidden>0</em>
+      </button>
+      <button type="button" class="nav-item" data-nav="words">
+        <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
+        <span data-i18n="nav_words">Từ vựng</span>
       </button>
       <button type="button" class="nav-item" data-action="open-settings">
         <svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg>
@@ -706,7 +768,7 @@
 
         <label class="setting setting--stack">
           <span class="setting__text"><strong data-i18n="set_voice">Giọng đọc</strong><small data-i18n="set_voice_sub">Tùy theo giọng có sẵn trên thiết bị</small></span>
-          <select class="select" id="set-voice"><option value="">Tự động (tiếng Anh)</option></select>
+          <select class="select" id="set-voice"><option value="" data-i18n="set_voice_auto">Tự động (tiếng Anh)</option></select>
         </label>
 
         <label class="setting setting--stack">
@@ -724,6 +786,35 @@
             <option value="0.95">95%</option>
           </select>
         </label>
+
+        <div class="setting setting--stack" id="set-ai">
+          <span class="setting__text"><strong data-i18n="set_ai">Nhận xét câu bằng AI (tùy chọn)</strong><small data-i18n="set_ai_sub">Dùng khóa API Anthropic của bạn.</small></span>
+          <input class="input" type="password" id="set-ai-key" autocomplete="off" spellcheck="false" placeholder="sk-ant-...">
+          <div class="btn-row">
+            <button class="btn btn--ghost" type="button" data-action="ai-key-save" data-i18n="ai_key_save">Lưu khóa</button>
+            <button class="btn btn--ghost" type="button" id="ai-key-clear" data-action="ai-key-clear" data-i18n="ai_key_clear" hidden>Xóa khóa</button>
+          </div>
+          <p class="muted small" id="ai-key-status"></p>
+        </div>
+
+        <div class="setting setting--stack" id="set-revlog">
+          <span class="setting__text"><strong data-i18n="set_log">Nhật ký ôn tập (nâng cao)</strong><small data-i18n="set_log_sub">Ghi lại từng lượt ôn trên thiết bị này.</small></span>
+          <p class="muted small" id="revlog-status"></p>
+          <div class="btn-row">
+            <button class="btn btn--ghost" type="button" data-action="revlog-export" data-i18n="log_export">Tải CSV</button>
+            <button class="btn btn--ghost" type="button" data-action="revlog-clear" data-i18n="log_clear">Xóa nhật ký</button>
+          </div>
+        </div>
+
+        <div class="setting setting--stack" id="set-fsrs">
+          <span class="setting__text"><strong data-i18n="set_w">Tham số FSRS (nâng cao)</strong><small data-i18n="set_w_sub">Dán 19 số (FSRS-5) từ công cụ tối ưu.</small></span>
+          <textarea class="input textarea fsrs-w" id="set-fsrs-w" rows="3" spellcheck="false" autocomplete="off" placeholder="0.40255, 1.18385, 3.173, …"></textarea>
+          <div class="btn-row">
+            <button class="btn btn--ghost" type="button" data-action="fsrs-w-save" data-i18n="w_save">Lưu tham số</button>
+            <button class="btn btn--ghost" type="button" data-action="fsrs-w-reset" data-i18n="w_reset">Dùng mặc định</button>
+          </div>
+          <p class="muted small" id="fsrs-w-status"></p>
+        </div>
 
         <label class="setting">
           <span class="setting__text"><strong data-i18n="set_hide_leech">Ẩn từ yếu (leech)</strong><small data-i18n="set_hide_leech_sub">Không đưa từ quên quá nhiều vào Review Today</small></span>
@@ -775,7 +866,7 @@
             </button>
           </div>
           <p class="muted small" id="cloud-hint" hidden>
-            Cần cấu hình Firebase trong <code>firebase-config.js</code>. Xem README.
+            <span data-i18n="cloud_cfg_pre">Cần cấu hình Firebase trong</span> <code>firebase-config.js</code>. <span data-i18n="cloud_cfg_post">Xem README.</span>
           </p>
         </div>
 
@@ -829,19 +920,19 @@
     <div class="modal__dialog glass-strong" role="dialog" aria-modal="true" aria-labelledby="profiles-title">
       <div class="modal__head">
         <h2 id="profiles-title" data-i18n="profiles_title">Tài khoản học</h2>
-        <button class="icon-btn icon-btn--sm" type="button" data-action="close-profiles" aria-label="Đóng">
+        <button class="icon-btn icon-btn--sm" type="button" data-action="close-profiles" aria-label="Đóng" data-i18n-aria="h_popup_close">
           <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
         </button>
       </div>
 
       <div class="profiles">
-        <p class="muted small">Mỗi tài khoản giữ <strong>toàn bộ</strong> việc học riêng: XP, level, streak, tiến độ từng từ (FSRS), unit đã xong, unit test. Có thể đồng bộ đám mây trong Cài đặt.</p>
-        <p class="muted small" id="persist-hint" hidden>Trình duyệt đã đánh dấu dữ liệu học là persistent (không tự xóa).</p>
+        <p class="muted small" data-i18n="profiles_intro">Mỗi tài khoản giữ toàn bộ việc học riêng: XP, level, streak, tiến độ từng từ (FSRS), unit đã xong, unit test. Có thể đồng bộ đám mây trong Cài đặt.</p>
+        <p class="muted small" id="persist-hint" data-i18n="persist_hint" hidden>Trình duyệt đã đánh dấu dữ liệu học là persistent (không tự xóa).</p>
 
         <ul class="profile-list" id="profile-list" role="list"></ul>
 
         <div class="profile-add">
-          <input class="input" type="text" id="profile-name-input" maxlength="40" placeholder="Tên tài khoản" autocomplete="off">
+          <input class="input" type="text" id="profile-name-input" maxlength="40" placeholder="Tên tài khoản" data-i18n-placeholder="profile_name_ph" autocomplete="off">
           <button class="btn btn--primary" type="button" data-action="add-profile" data-i18n="add_profile">Thêm tài khoản</button>
         </div>
 
@@ -853,8 +944,8 @@
         </div>
 
         <label class="setting setting--stack">
-          <span class="setting__text"><strong>Import</strong><small>Dán mã sao lưu hoặc chọn file</small></span>
-          <textarea class="input textarea" id="profile-import-code" rows="3" placeholder="Dán mã sao lưu"></textarea>
+          <span class="setting__text"><strong>Import</strong><small data-i18n="import_hint">Dán mã sao lưu hoặc chọn file</small></span>
+          <textarea class="input textarea" id="profile-import-code" rows="3" placeholder="Dán mã sao lưu" data-i18n-placeholder="import_ph"></textarea>
         </label>
         <div class="btn-row profile-import-row">
           <label class="radio-pill"><input type="radio" name="import-mode" value="merge" checked> Merge</label>
@@ -941,7 +1032,7 @@
     <div class="levelup__card glass-strong">
       <p class="levelup__kicker" data-i18n="levelup_kicker">Lên cấp!</p>
       <strong class="levelup__number" id="levelup-number">2</strong>
-      <p class="muted">Bạn đã đạt Level <b id="levelup-number-text">2</b>. Tiếp tục phát huy nhé.</p>
+      <p class="muted"><span data-i18n="levelup_pre">Bạn đã đạt Level</span> <b id="levelup-number-text">2</b>. <span data-i18n="levelup_post">Tiếp tục phát huy nhé.</span></p>
       <button class="btn btn--primary" type="button" data-action="close-levelup" data-i18n="continue">Tiếp tục</button>
     </div>
   </div>
@@ -969,10 +1060,10 @@
         <span class="progress progress--thin" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
           <span class="progress__fill" style="width:0%"></span>
         </span>
-        <span class="unit-card__pct"><b class="unit-card__mastered">0</b>/<span class="unit-card__total">20</span> từ · <b class="unit-card__percent">0%</b></span>
+        <span class="unit-card__pct"><b class="unit-card__mastered">0</b>/<span class="unit-card__total">20</span> <span class="uc-words">từ</span> · <b class="unit-card__percent">0%</b></span>
       </span>
-      <span class="unit-card__due" hidden><b class="unit-card__due-count">0</b> từ cần ôn</span>
-      <span class="unit-card__test" hidden><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Unit Test đạt <b class="unit-card__test-score">0</b>%</span>
+      <span class="unit-card__due" hidden><b class="unit-card__due-count">0</b> <span class="uc-due">từ cần ôn</span>
+      <span class="unit-card__test" hidden><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="uc-test">Unit Test đạt</span> <b class="unit-card__test-score">0</b>%</span>
       <svg class="icon unit-card__lock" aria-hidden="true" hidden><use href="#i-lock"/></svg>
     </button>
   </template>
@@ -999,7 +1090,7 @@
   </template>
 
   <noscript>
-    <p class="noscript">Ứng dụng cần JavaScript để hoạt động. Hãy bật JavaScript trong trình duyệt.</p>
+    <p class="noscript">This app needs JavaScript to run. Please enable JavaScript in your browser. / Ứng dụng cần JavaScript để hoạt động.</p>
   </noscript>
 
   <!-- Thứ tự quan trọng: firebase-config.js trước app.js; dữ liệu sách (data-book*.js) được app.js nạp theo nhu cầu.

@@ -1,5 +1,5 @@
 /* 4000 Essential English Words — Service Worker */
-const CACHE_NAME = 'eew-v10';
+const CACHE_NAME = 'eew-v18';
 const CORE = [
   './',
   './index.html',
